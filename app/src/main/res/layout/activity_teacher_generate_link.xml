@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".teacher.GenerateLink">
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/generate_lecture_date"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/lecture_date"
+		android:paddingHorizontal="8dp"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:cursorVisible="false"
+			android:focusable="false"
+			android:focusableInTouchMode="false"
+			android:inputType="none" />
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/generate_lecture_start"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/lecture_start_time"
+		android:paddingHorizontal="8dp"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/generate_lecture_date">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:cursorVisible="false"
+			android:focusable="false"
+			android:focusableInTouchMode="false"
+			android:inputType="none" />
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/generate_lecture_end"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/lecture_end_time"
+		android:paddingHorizontal="8dp"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/generate_lecture_start">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:cursorVisible="false"
+			android:focusable="false"
+			android:focusableInTouchMode="false"
+			android:inputType="none" />
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/generate_link_expire"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/link_will_expire_in"
+		android:paddingHorizontal="8dp"
+		app:endIconMode="dropdown_menu"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/generate_lecture_end">
+		
+		<AutoCompleteTextView
+			android:id="@+id/generate_link_expire_dropdown"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:inputType="none"
+			android:paddingHorizontal="16dp" />
+	</com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

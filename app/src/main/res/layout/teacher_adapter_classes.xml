@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:layout_margin="8dp"
+	android:elevation="3dp"
+	app:cardCornerRadius="16dp">
+	
+	<com.google.android.material.progressindicator.CircularProgressIndicator
+		android:layout_width="wrap_content"
+		android:layout_gravity="center"
+		android:indeterminate="true"
+		android:id="@+id/teacher_adapter_classes_recycler_image_progress"
+		android:layout_height="wrap_content"/>
+	
+	<ImageView
+		android:id="@+id/teacher_adapter_classes_recycler_image_view"
+		android:layout_width="match_parent"
+		android:layout_height="125dp"
+		android:scaleType="centerCrop"
+		android:src="@mipmap/ic_launcher"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+	
+	<TextView
+		android:id="@+id/teacher_adapter_classes_recycler_text_view"
+		style="@style/MaterialAlertDialog.MaterialComponents.Title.Icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:textColor="@color/design_default_color_on_primary"
+		android:textSize="36sp"
+		android:textStyle="bold"
+		tools:text="@string/submit" />
+
+</com.google.android.material.card.MaterialCardView>

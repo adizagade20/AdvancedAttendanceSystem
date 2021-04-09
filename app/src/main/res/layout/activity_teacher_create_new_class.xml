@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingHorizontal="8dp"
+	tools:context=".teacher.CreateNewClass">
+	
+	<TextView
+		android:id="@+id/teacher_create_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:text="@string/create_new_class"
+		android:textSize="20sp"
+		android:textStyle="bold|italic"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/teacher_create_class_name"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:hint="@string/class_name"
+		android:paddingHorizontal="8dp"
+		app:endIconMode="clear_text"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/teacher_create_title">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<TextView
+		android:id="@+id/teacher_create_select_image_tv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:text="@string/select_image_for_class_background"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/teacher_create_class_name" />
+	
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/teacher_create_recycler_view"
+		android:layout_marginTop="8dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:layout_constraintLeft_toLeftOf="parent"
+		
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/teacher_create_select_image_tv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

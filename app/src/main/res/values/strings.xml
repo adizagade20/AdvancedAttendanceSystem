@@ -1,0 +1,22 @@
+<resources>
+	<string name="app_name">Attendance System</string>
+	<string name="full_name">Full Name</string>
+	<string name="email">Email</string>
+	<string name="mobile_number">Mobile Number</string>
+	<string name="password">Password</string>
+	<string name="student">Student</string>
+	<string name="teacher">Teacher</string>
+	<string name="submit">Submit</string>
+	<string name="already_have_account_log_in">Already have account, log in</string>
+	<string name="login">Login</string>
+	<string name="register">Register</string>
+	<string name="roll_number">Roll Number</string>
+	<string name="lecture_date">Lecture Date</string>
+	<string name="lecture_start_time">Lecture Start Time</string>
+	<string name="lecture_end_time">Lecture End Time</string>
+	<string name="link_will_expire_in">Link will expire in</string>
+	<string name="you_don_t_have_any_classes_yet_lets_add_one_by_clicking_the_below_button">You don\'t have any classes yet, lets add one by clicking the below button</string>
+	<string name="create_new_class">Create new class</string>
+	<string name="class_name">Class Name</string>
+	<string name="select_image_for_class_background">Select image for class background</string>
+</resources>

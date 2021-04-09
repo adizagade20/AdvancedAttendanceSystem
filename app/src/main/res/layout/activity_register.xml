@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".root.Register">
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/register_name"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:hint="@string/full_name"
+		android:paddingHorizontal="8dp"
+		app:endIconMode="clear_text"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/register_email"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/email"
+		android:paddingHorizontal="8dp"
+		app:endIconMode="clear_text"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/register_name">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/register_phone"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/mobile_number"
+		android:paddingHorizontal="8dp"
+		app:counterEnabled="true"
+		app:counterMaxLength="10"
+		app:endIconMode="clear_text"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/register_email">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/register_password"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/password"
+		android:paddingHorizontal="8dp"
+		app:endIconMode="password_toggle"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/register_phone">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:inputType="textPassword" />
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<RadioGroup
+		android:id="@+id/register_role"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="32dp"
+		android:layout_marginTop="8dp"
+		android:orientation="horizontal"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/register_password">
+		
+		<com.google.android.material.radiobutton.MaterialRadioButton
+			android:id="@+id/register_role_teacher"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:checked="false"
+			android:text="@string/teacher" />
+		
+		<com.google.android.material.radiobutton.MaterialRadioButton
+			android:id="@+id/register_role_student"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:checked="false"
+			android:text="@string/student" />
+	
+	</RadioGroup>
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/register_roll_no"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/roll_number"
+		android:paddingHorizontal="8dp"
+		android:visibility="invisible"
+		app:endIconMode="clear_text"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/register_role">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/register_register"
+		style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="50dp"
+		android:text="@string/register"
+		android:textSize="18sp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent" />
+	
+	<TextView
+		android:id="@+id/register_login"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="16dp"
+		android:text="@string/already_have_account_log_in"
+		android:textColor="@color/design_default_color_primary"
+		android:textSize="14sp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
