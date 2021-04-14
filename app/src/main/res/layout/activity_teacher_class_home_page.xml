@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".teacher.ClassHomePage">
+	
+	<com.google.android.material.appbar.AppBarLayout
+		android:id="@+id/class_home_page_appbar_layout"
+		android:layout_width="match_parent"
+		android:layout_height="200dp"
+		android:fitsSystemWindows="true">
+		
+		<com.google.android.material.appbar.CollapsingToolbarLayout
+			android:id="@+id/class_home_page_collapsing_toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:fitsSystemWindows="true"
+			app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+			tools:title="@string/submit">
+			
+			<ImageView
+				android:id="@+id/class_home_page_image_view"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:scaleType="centerCrop"
+				app:layout_collapseMode="parallax" />
+			
+			<com.google.android.material.appbar.MaterialToolbar
+				android:id="@+id/class_home_page_toolbar"
+				android:layout_width="match_parent"
+				android:layout_height="?attr/actionBarSize"
+				app:layout_collapseMode="pin"
+				app:titleTextColor="@color/design_default_color_on_secondary" />
+		
+		</com.google.android.material.appbar.CollapsingToolbarLayout>
+	
+	</com.google.android.material.appbar.AppBarLayout>
+	
+	<androidx.core.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginTop="24dp"
+		app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+		
+		<include
+			android:id="@+id/class_home_page_extended_include"
+			layout="@layout/activity_teacher_class_home_page_extended" />
+	
+	</androidx.core.widget.NestedScrollView>
+	
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id="@+id/class_home_page_floating"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="30dp"
+		android:baselineAlignBottom="false"
+		android:src="@drawable/ic_add"
+		android:visibility="invisible"
+		app:fabSize="normal"
+		app:layout_anchor="@id/class_home_page_appbar_layout"
+		app:layout_anchorGravity="end|bottom" />
+	
+	<com.hitomi.cmlibrary.CircleMenu
+		android:id="@+id/class_home_page_circle_menu"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:baselineAlignBottom="false"
+		app:layout_anchor="@id/class_home_page_appbar_layout"
+		app:layout_anchorGravity="end|bottom" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

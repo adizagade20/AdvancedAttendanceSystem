@@ -130,16 +130,16 @@ class Register : AppCompatActivity() {
 				db.set(userData)
 					.addOnSuccessListener {
 						if (itAuth.additionalUserInfo?.isNewUser == true) {
-							val builder = AlertDialog.Builder(this)
-							builder.setCancelable(false)
-							builder.setTitle("Welcome")
-							builder.setMessage("Hi ${itAuth.user?.displayName}, Welcome to the app \"Attendance System\"")
-							builder.setPositiveButton("Continue") { dialog, _ ->
-								intentFunction()
-								dialog.dismiss()
-							}
-							val alert = builder.create()
-							alert.show()
+							AlertDialog.Builder(this)
+								.setCancelable(false)
+								.setTitle("Welcome")
+								.setMessage("Hi ${itAuth.user?.displayName}, Welcome to the app \"Attendance System\"")
+								.setPositiveButton("Continue") { dialog, _ ->
+									intentFunction()
+									dialog.dismiss()
+								}
+								.create()
+								.show()
 						} else {
 							intentFunction()
 						}

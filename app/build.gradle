@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.gms.google-services'
+    id 'com.google.secrets_gradle_plugin' version '0.5'
 }
 
 android {
@@ -48,9 +49,22 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx'
 
 
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
     implementation 'com.squareup.picasso:picasso:2.8'
+
+
+
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+
+
+    implementation 'com.github.Hitomis:CircleMenu:v1.1.0'
+
 
 
     testImplementation 'junit:junit:4.+'

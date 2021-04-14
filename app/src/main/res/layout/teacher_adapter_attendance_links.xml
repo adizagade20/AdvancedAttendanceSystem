@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_margin="4dp"
+	android:layout_marginHorizontal="8dp"
+	app:cardCornerRadius="8dp">
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginHorizontal="8sp"
+		android:layout_marginVertical="4dp">
+		
+		<TextView
+			android:id="@+id/links_date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginVertical="4dp"
+			android:textSize="16sp"
+			android:textStyle="bold"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="Date" />
+		
+		<TextView
+			android:id="@+id/links_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="32dp"
+			android:textSize="14sp"
+			app:layout_constraintBottom_toBottomOf="@id/links_date"
+			app:layout_constraintLeft_toRightOf="@id/links_date"
+			app:layout_constraintTop_toTopOf="@id/links_date"
+			tools:text="Time" />
+		
+		<TextView
+			android:id="@+id/links_attendance"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="32dp"
+			android:layout_marginRight="8dp"
+			app:layout_constraintBottom_toBottomOf="@id/links_date"
+			app:layout_constraintRight_toLeftOf="@id/links_activation_switch"
+			app:layout_constraintTop_toTopOf="@id/links_date"
+			tools:text="Attendance" />
+		
+		<TextView
+			android:id="@+id/links_link"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="4dp"
+			android:textSize="14sp"
+			android:textStyle="italic"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/links_date"
+			tools:text="Link" />
+		
+		<com.google.android.material.switchmaterial.SwitchMaterial
+			android:id="@+id/links_activation_switch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingHorizontal="4dp"
+			android:paddingBottom="8dp"
+			app:layout_constraintRight_toLeftOf="@id/links_share"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="Activate" />
+		
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/links_share"
+			style="@style/Widget.MaterialComponents.Button.TextButton"
+			android:layout_width="48sp"
+			android:layout_height="wrap_content"
+			android:drawableRight="@drawable/ic_share"
+			android:paddingBottom="8dp"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

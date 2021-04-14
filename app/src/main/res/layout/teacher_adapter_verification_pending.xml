@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingHorizontal="8dp">
+	
+	<TextView
+		android:id="@+id/verify_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="16sp"
+		android:textStyle="bold"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="@string/full_name" />
+	
+	<TextView
+		android:id="@+id/verify_roll_number"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toBottomOf="@id/verify_name"
+		app:layout_constraintLeft_toLeftOf="@id/verify_name"
+		app:layout_constraintRight_toLeftOf="@id/verify_accept_switch"
+		app:layout_constraintTop_toTopOf="@id/verify_name"
+		tools:text="@string/roll_number" />
+	
+	<TextView
+		android:id="@+id/verify_email"
+		android:layout_marginTop="8dp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/verify_name"
+		tools:text="@string/email" />
+	
+	<com.google.android.material.switchmaterial.SwitchMaterial
+		android:id="@+id/verify_accept_switch"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="4dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintRight_toLeftOf="@id/verify_delete"
+		app:layout_constraintTop_toTopOf="parent" />
+	
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/verify_delete"
+		style="@style/Widget.MaterialComponents.Button.TextButton"
+		android:layout_width="48dp"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="4dp"
+		android:drawableRight="@drawable/ic_circular_delete_forever"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

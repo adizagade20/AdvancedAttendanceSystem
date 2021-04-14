@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	package="com.aditya.attendancesystem">
 	
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	
 	<application
-		android:allowBackup="false"
+		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/app_name"
 		android:roundIcon="@mipmap/ic_launcher_round"
-		android:supportsRtl="false"
+		android:supportsRtl="true"
 		android:theme="@style/Theme.AttendanceSystem">
+		
 		
 		
 		<activity android:name=".root.Login">
@@ -17,22 +23,69 @@
 				
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+			<intent-filter android:autoVerify="true" tools:targetApi="m">
+				<action android:name="android.intent.action.VIEW" />
+				
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				
+				<data
+					android:host="advancedattendance.page.link"
+					android:scheme="http" />
+				<data
+					android:host="advancedattendance.page.link"
+					android:scheme="https" />
+				<data
+					android:host="advancedattendance.web.app"
+					android:scheme="http" />
+				<data
+					android:host="advancedattendance.web.app"
+					android:scheme="https" />
+				<data
+					android:host="advancedattendance.firebaseapp.com"
+					android:scheme="http" />
+				<data
+					android:host="advancedattendance.firebaseapp.com/"
+					android:scheme="https" />
+			</intent-filter>
 		</activity>
 		<activity
 			android:name=".root.Register"
 			android:parentActivityName=".root.Login" />
 		
 		
+		
 		<activity android:name=".student.Home" />
+		<activity android:name=".student.RecordAttendance" />
+		
 		
 		
 		<activity android:name=".teacher.Home" />
 		<activity
 			android:name=".teacher.CreateNewClass"
 			android:parentActivityName=".teacher.Home" />
-		<activity android:name=".teacher.GenerateLink" />
+		<activity
+			android:name=".teacher.ClassHomePage"
+			android:parentActivityName=".teacher.Home"
+			android:theme="@style/Theme.AttendanceSystemNoActionBar" />
+		<activity
+			android:name=".teacher.GenerateLink"
+			android:parentActivityName=".teacher.ClassHomePage" />
+		<activity android:name=".teacher.VerificationPending"
+			android:parentActivityName=".teacher.ClassHomePage" />
 		
 		
+		
+		<meta-data
+			android:name="com.google.android.gms.version"
+			android:value="@integer/google_play_services_version" />
+		<meta-data
+			android:name="com.google.android.geo.API_KEY"
+			android:value="${MAPS_API_KEY}" />
+		
+		<uses-library
+			android:name="org.apache.http.legacy"
+			android:required="false" />
 	</application>
 
 </manifest>

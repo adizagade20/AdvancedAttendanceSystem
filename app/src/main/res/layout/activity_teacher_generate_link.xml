@@ -1,89 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:orientation="vertical"
 	tools:context=".teacher.GenerateLink">
 	
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/generate_lecture_date"
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/lecture_date"
-		android:paddingHorizontal="8dp"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
+		android:layout_height="0dp"
+		android:layout_marginHorizontal="8dp"
+		android:layout_weight="1"
+		android:baselineAligned="false"
+		android:orientation="horizontal">
 		
-		<com.google.android.material.textfield.TextInputEditText
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:cursorVisible="false"
-			android:focusable="false"
-			android:focusableInTouchMode="false"
-			android:inputType="none" />
-	</com.google.android.material.textfield.TextInputLayout>
-	
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/generate_lecture_start"
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/lecture_start_time"
-		android:paddingHorizontal="8dp"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/generate_lecture_date">
-		
-		<com.google.android.material.textfield.TextInputEditText
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/generate_date_layout"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:cursorVisible="false"
-			android:focusable="false"
-			android:focusableInTouchMode="false"
-			android:inputType="none" />
-	</com.google.android.material.textfield.TextInputLayout>
-	
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/generate_lecture_end"
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/lecture_end_time"
-		android:paddingHorizontal="8dp"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/generate_lecture_start">
+			android:layout_marginHorizontal="4dp"
+			android:layout_weight="1"
+			android:hint="@string/date"
+			tools:ignore="NestedWeights">
+			
+			<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:cursorVisible="false"
+				android:focusable="false"
+				android:focusableInTouchMode="false"
+				android:inputType="none"
+				android:paddingStart="8dp"
+				tools:ignore="RtlSymmetry" />
+		</com.google.android.material.textfield.TextInputLayout>
 		
-		<com.google.android.material.textfield.TextInputEditText
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:cursorVisible="false"
-			android:focusable="false"
-			android:focusableInTouchMode="false"
-			android:inputType="none" />
-	</com.google.android.material.textfield.TextInputLayout>
-	
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/generate_link_expire"
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/link_will_expire_in"
-		android:paddingHorizontal="8dp"
-		app:endIconMode="dropdown_menu"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/generate_lecture_end">
-		
-		<AutoCompleteTextView
-			android:id="@+id/generate_link_expire_dropdown"
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/generate_start_time_layout"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:inputType="none"
-			android:paddingHorizontal="16dp" />
-	</com.google.android.material.textfield.TextInputLayout>
+			android:layout_marginHorizontal="4dp"
+			android:layout_weight="1"
+			android:hint="@string/start_time">
+			
+			<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:cursorVisible="false"
+				android:focusable="false"
+				android:focusableInTouchMode="false"
+				android:inputType="none"
+				android:paddingLeft="8dp" />
+		</com.google.android.material.textfield.TextInputLayout>
+		
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/generate_duration_layout"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="4dp"
+			android:layout_weight="1"
+			android:hint="@string/duration"
+			app:endIconMode="dropdown_menu">
+			
+			<!--<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:cursorVisible="false"
+				android:focusable="false"
+				android:focusableInTouchMode="false"
+				android:inputType="none"
+				android:paddingLeft="8dp" />-->
+			
+			<AutoCompleteTextView
+				android:id="@+id/generate_duration"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="none"
+				android:paddingHorizontal="8dp"
+				tools:ignore="LabelFor" />
+		</com.google.android.material.textfield.TextInputLayout>
+	
+	</LinearLayout>
+	
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_marginHorizontal="8dp"
+		android:layout_weight="1"
+		android:baselineAligned="false"
+		android:orientation="horizontal">
+		
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/generate_expire_layout"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="4dp"
+			android:layout_weight="1"
+			android:hint="@string/link_expire"
+			android:visibility="invisible"
+			app:endIconMode="dropdown_menu"
+			tools:ignore="NestedWeights">
+			
+			<AutoCompleteTextView
+				android:id="@+id/generate_expire"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="none"
+				android:paddingHorizontal="8dp"
+				tools:ignore="LabelFor" />
+		</com.google.android.material.textfield.TextInputLayout>
+		
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_marginHorizontal="4dp"
+			android:layout_marginTop="-6dp"
+			android:layout_weight="1">
+			
+			<com.google.android.material.textfield.TextInputLayout
+				android:id="@+id/generate_classroom_mode_layout"
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:hint="@string/classroom_mode"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintLeft_toLeftOf="parent"
+				app:layout_constraintRight_toRightOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
+				
+				<com.google.android.material.textfield.TextInputEditText
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:cursorVisible="false"
+					android:focusable="false"
+					android:focusableInTouchMode="false"
+					android:inputType="none"
+					android:paddingLeft="8dp" />
+			
+			</com.google.android.material.textfield.TextInputLayout>
+			
+			<com.google.android.material.switchmaterial.SwitchMaterial
+				android:id="@+id/generate_classroom_activation_switch"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center_vertical"
+				app:layout_constraintBottom_toBottomOf="@id/generate_classroom_mode_layout"
+				app:layout_constraintRight_toRightOf="parent" />
+		
+		</androidx.constraintlayout.widget.ConstraintLayout>
+		
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/generate_radius_layout"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="4dp"
+			android:layout_weight="1"
+			android:hint="@string/radius"
+			android:visibility="invisible"
+			app:endIconMode="dropdown_menu">
+			
+			<AutoCompleteTextView
+				android:id="@+id/generate_radius"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="none"
+				android:paddingHorizontal="8dp"
+				tools:ignore="LabelFor" />
+		</com.google.android.material.textfield.TextInputLayout>
+	
+	</LinearLayout>
+	
+	<LinearLayout
+		android:id="@+id/generate_advanced"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_marginHorizontal="4dp"
+		android:layout_weight="8"
+		android:visibility="invisible">
+		
+		<fragment
+			android:id="@+id/generate_advanced_map"
+			class="com.google.android.gms.maps.SupportMapFragment"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	
+	</LinearLayout>
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"
+		android:id="@+id/generate_progress_layout"
+		android:background="@color/gray">
+		
+		<com.google.android.material.progressindicator.CircularProgressIndicator
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:indeterminate="true"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
