@@ -105,14 +105,24 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 			// binding.root.setBackgroundColor(Color.parseColor("#ecfffb"))
 			
 			setMainMenu(ResourcesCompat.getColor(resources, R.color.teal_200, null), R.drawable.ic_menu, R.drawable.ic_cancel)
-			addSubMenu(Color.parseColor("#83e85a"), R.drawable.ic_circular_verification_pending)
+			addSubMenu(Color.parseColor("#ba53de"), R.drawable.ic_generate)
 			addSubMenu(Color.parseColor("#ff4b32"), R.drawable.ic_circular_delete_forever)
 			addSubMenu(Color.parseColor("#ff8a5c"), R.drawable.ic_circular_export)
 			addSubMenu(Color.parseColor("#88bef5"), R.drawable.ic_circular_verification_done)
+			addSubMenu(Color.parseColor("#83e85a"), R.drawable.ic_circular_verification_pending)
+			
 			setOnMenuSelectedListener {
-				when(it) {
-					0 -> {
-						
+				Timer().schedule(1000) {
+					runOnUiThread {
+						when (it) {
+							0 -> {
+								val intent = Intent(this@ClassHomePage, GenerateLink::class.java)
+								intent.putExtra("className", className)
+								startActivity(intent)
+							}
+							3 -> startActivity(Intent(this@ClassHomePage, StudentList::class.java))
+							4 ->  startActivity(Intent(this@ClassHomePage, VerificationPending::class.java))
+						}
 					}
 				}
 			}

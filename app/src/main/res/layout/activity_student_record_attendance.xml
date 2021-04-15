@@ -1,9 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:layout_margin="4dp"
+	android:orientation="vertical"
 	tools:context=".student.RecordAttendance">
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="15">
+		
+		<TextView
+			android:id="@+id/record_class_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="16dp"
+			android:textSize="20sp"
+			android:textStyle="bold|italic"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="@string/class_name" />
+		
+		<TextView
+			android:id="@+id/record_date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="16dp"
+			android:textSize="16sp"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toLeftOf="@id/record_time"
+			app:layout_constraintTop_toBottomOf="@id/record_class_name"
+			tools:text="@string/date" />
+		
+		<TextView
+			android:id="@+id/record_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="16sp"
+			app:layout_constraintBottom_toBottomOf="@id/record_date"
+			app:layout_constraintLeft_toRightOf="@id/record_date"
+			app:layout_constraintRight_toRightOf="@id/record_duration"
+			app:layout_constraintTop_toTopOf="@id/record_date"
+			tools:text="@string/start_time" />
+		
+		<TextView
+			android:id="@+id/record_duration"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="16sp"
+			app:layout_constraintBottom_toBottomOf="@id/record_date"
+			app:layout_constraintLeft_toRightOf="@id/record_time"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toTopOf="@id/record_date"
+			tools:text="@string/duration" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
+	
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="85"
+		android:orientation="vertical">
+		
+		<fragment
+			android:id="@+id/record_map"
+			class="com.google.android.gms.maps.SupportMapFragment"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	
+	</LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

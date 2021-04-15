@@ -73,6 +73,8 @@
 			android:parentActivityName=".teacher.ClassHomePage" />
 		<activity android:name=".teacher.VerificationPending"
 			android:parentActivityName=".teacher.ClassHomePage" />
+		<activity android:name=".teacher.StudentList"
+			android:parentActivityName=".teacher.ClassHomePage" />
 		
 		
 		

@@ -17,7 +17,6 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-
 class Home : AppCompatActivity(), CoroutineScope {
 	
 	companion object {

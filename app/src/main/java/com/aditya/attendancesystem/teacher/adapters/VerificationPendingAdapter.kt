@@ -1,6 +1,5 @@
 package com.aditya.attendancesystem.teacher.adapters
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class VerificationPendingAdapter(private val context: Context, private val className: String, private val verifiedStudentsList: ArrayList<StudentDataVerification>) :
+class VerificationPendingAdapter(private val className: String, private val studentsList: ArrayList<StudentDataVerification>) :
 	RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	companion object {
@@ -28,10 +27,12 @@ class VerificationPendingAdapter(private val context: Context, private val class
 	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 		holder as ViewHolder
 		with(holder.binding) {
-			verifyName.text = verifiedStudentsList[position].Name
-			verifyEmail.text = verifiedStudentsList[position].Email
-			verifyRollNumber.text = verifiedStudentsList[position].RollNumber.toString()
+			verifyName.text = studentsList[position].Name
+			verifyEmail.text = studentsList[position].Email
+			verifyRollNumber.text = studentsList[position].RollNumber.toString()
 			verifyAcceptSwitch.isChecked = false
+			
+			Log.d(TAG, "onBindViewHolder: ${studentsList[position]}")
 			
 			verifyAcceptSwitch.setOnCheckedChangeListener { buttonView, _ ->
 				verifyStudent(position, buttonView)
@@ -46,7 +47,7 @@ class VerificationPendingAdapter(private val context: Context, private val class
 	
 	
 	override fun getItemCount(): Int {
-		TODO("Not yet implemented")
+		return studentsList.size
 	}
 	
 	
@@ -57,14 +58,16 @@ class VerificationPendingAdapter(private val context: Context, private val class
 		switch.isEnabled = false
 		
 		var db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className).document("students")
-			.collection("verification_pending").document(verifiedStudentsList[position].id.toString())
+			.collection("verification_pending").document(studentsList[position].id.toString())
 		db.delete()
 			.addOnSuccessListener {
 				db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className).document("students")
-					.collection("verified").document(verifiedStudentsList[position].id.toString())
-				db.set(verifiedStudentsList[position])
+					.collection("verified").document(studentsList[position].id.toString())
+				db.set(studentsList[position])
 					.addOnSuccessListener {
 						Log.d(TAG, "verifyStudent: Successful")
+						
+						switch.isEnabled = true
 					}
 			}
 		
@@ -72,7 +75,12 @@ class VerificationPendingAdapter(private val context: Context, private val class
 	
 	
 	private fun deleteRequest(position: Int) {
-	
+		var db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className).document("students")
+			.collection("verification_pending").document(studentsList[position].id.toString())
+		db.delete()
+			.addOnSuccessListener {
+				Log.d(TAG, "deleteRequest: Deleted successfully")
+			}
 	}
 	
 	

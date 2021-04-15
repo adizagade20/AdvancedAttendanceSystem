@@ -71,7 +71,7 @@ class Login : AppCompatActivity() {
 				if (user != null) {
 					val role = getSharedPreferences("UserData", MODE_PRIVATE).getString("Role", null)
 					if(role == "Student") {
-						val intent = Intent(this, com.aditya.attendancesystem.student.Home::class.java)
+						val intent = Intent(this, com.aditya.attendancesystem.student.RecordAttendance::class.java)
 						intent.putExtra("isDeepLink", isDeepLink)
 						startActivity(intent)
 						finish()
@@ -131,7 +131,7 @@ class Login : AppCompatActivity() {
 						Log.d(TAG, "loginUser: $it")
 						if (it["Role"] == "Student") {
 							writeToSharedPreferences(it)
-							val intent = Intent(this, com.aditya.attendancesystem.student.Home::class.java)
+							val intent = Intent(this, com.aditya.attendancesystem.student.RecordAttendance::class.java)
 							intent.putExtra("isDeepLink", isDeepLink)
 							startActivity(intent)
 							finish()

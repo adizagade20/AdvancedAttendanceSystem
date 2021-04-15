@@ -43,6 +43,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.concurrent.schedule
 import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
@@ -71,7 +72,6 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 	
 	
 	private lateinit var className: String
-	private lateinit var classImage: String
 	
 	private lateinit var googleMap: GoogleMap
 	private lateinit var locationClient : FusedLocationProviderClient
@@ -252,14 +252,7 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 		val time = "$startHour:$startMinute"
 		val docId = "$year$month${day}_$startHour$startMinute"
 		
-		val attendanceLinkDataClass = AttendanceLinkDataClass(
-			docId,
-			0,
-			lectureDate,
-			lectureDuration?.replace("[^0-9]".toRegex(), "")?.toInt(),
-			true,
-			time
-		)
+		val attendanceLinkDataClass = AttendanceLinkDataClass(docId, 0, lectureDate, lectureDuration?.replace("[^0-9]".toRegex(), "")?.toInt(), true, time)
 		
 		if(binding.generateClassroomActivationSwitch.isChecked) {
 			with(attendanceLinkDataClass) {
@@ -268,21 +261,6 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 				radius = radiusSelected?.replace("[^0-9]".toRegex(), "")?.toInt()
 			}
 		}
-		
-		
-/*		val data = HashMap<String, Any>()
-		lectureDate?.let { data.put("date", it) }
-		data["time"] = time
-		lectureDuration?.let { data.put("duration", it) }
-		data["isActivated"] = true
-
-		if(binding.generateClassroomActivationSwitch.isChecked) {
-			data["isClassroomModeActivated"] = true
-			data["radius"] = radiusSelected?.replace("[^0-9]".toRegex(), "")
-			data["latitude"] = latitudeMyLocation.toString()
-			data["longitude"] = longitudeMyLocation.toString()
-		}*/
-		
 		
 		val db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className).document(docId)
 		db.set(attendanceLinkDataClass)
@@ -338,21 +316,7 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 	
 	
 	
-// 	fun addAttendanceRecord() {
-//		if(get(/databases/$(database)/documents/attendance/$(uid)/$(className)/$(attendance)).data.isActivated) {
-//			if(get(/databases/$(database)/documents/attendance/$(uid)/$(className)/$(attendance)).data.isClassroomActivated) {
-//				if(get(/databases/$(database)/documents/attendance/$(uid)/$(className)/$(attendance)).data.location.distance(request.resource.data.location) <= get(/databases/$(database)/documents/attendance/$(uid)/$(className)/$(attendance)).data.radius) {
-//					return true;
-//				} else {
-//					return false;
-//				}
-//			} else {
-//				return true;
-//			}
-//		} else {
-//			return false;
-//		}
-//	}
+	
 	
 	
 	
@@ -380,11 +344,15 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 	
 	
 	private fun initMap() {
+		if (isPermissionGranted()) {
 			if (isGPSEnabled()) {
 				val supportMapFragment = supportFragmentManager.findFragmentById(R.id.generate_advanced_map) as SupportMapFragment
 				runOnUiThread { supportMapFragment.getMapAsync(this) }
 				getCurrentLocation()
 			}
+		} else {
+			ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, LOCATION_REQUEST_CODE)
+		}
 	}
 	
 	
@@ -413,7 +381,7 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 	
 	private fun gotoLocation(latitude: Double, longitude: Double) {
 		val latLng = LatLng(latitude, longitude)
-		val cameraUpdate = CameraUpdateFactory.newLatLng(latLng)
+		val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 19f)
 		googleMap.moveCamera(cameraUpdate)
 		googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 		

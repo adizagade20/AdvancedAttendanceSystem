@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingHorizontal="4dp">
+	
+	<TextView
+		android:id="@+id/list_sr_no"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="16sp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="1" />
+	
+	<TextView
+		android:id="@+id/list_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="16dp"
+		android:textSize="16sp"
+		android:textStyle="bold"
+		app:layout_constraintBottom_toTopOf="@id/list_email"
+		app:layout_constraintLeft_toRightOf="@id/list_sr_no"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="@string/full_name" />
+	
+	<TextView
+		android:id="@+id/list_roll_number"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="16dp"
+		android:layout_marginBottom="4dp"
+		android:layout_marginTop="8dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintLeft_toRightOf="@id/list_sr_no"
+		app:layout_constraintTop_toBottomOf="@id/list_name"
+		tools:text="@string/roll_number" />
+	
+	<TextView
+		android:id="@+id/list_email"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="16dp"
+		app:layout_constraintBottom_toBottomOf="@id/list_roll_number"
+		app:layout_constraintLeft_toRightOf="@id/list_roll_number"
+		app:layout_constraintTop_toTopOf="@id/list_roll_number"
+		tools:text="@string/email" />
+	
+	<TextView
+		android:id="@+id/list_attendance"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_marginRight="8dp"
+		tools:text="@string/app_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
