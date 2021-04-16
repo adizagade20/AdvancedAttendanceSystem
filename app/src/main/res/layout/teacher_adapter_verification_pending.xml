@@ -4,6 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:layout_marginVertical="4dp"
 	android:paddingHorizontal="8dp">
 	
 	<TextView
@@ -17,16 +18,6 @@
 		tools:text="@string/full_name" />
 	
 	<TextView
-		android:id="@+id/verify_roll_number"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		app:layout_constraintBottom_toBottomOf="@id/verify_name"
-		app:layout_constraintLeft_toLeftOf="@id/verify_name"
-		app:layout_constraintRight_toLeftOf="@id/verify_accept_switch"
-		app:layout_constraintTop_toTopOf="@id/verify_name"
-		tools:text="@string/roll_number" />
-	
-	<TextView
 		android:id="@+id/verify_email"
 		android:layout_marginTop="8dp"
 		android:layout_width="wrap_content"
@@ -34,6 +25,16 @@
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/verify_name"
 		tools:text="@string/email" />
+	
+	<TextView
+		android:id="@+id/verify_roll_number"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toBottomOf="@id/verify_email"
+		app:layout_constraintLeft_toRightOf="@id/verify_email"
+		app:layout_constraintRight_toLeftOf="@id/verify_accept_switch"
+		app:layout_constraintTop_toTopOf="@id/verify_email"
+		tools:text="@string/roll_number" />
 	
 	<com.google.android.material.switchmaterial.SwitchMaterial
 		android:id="@+id/verify_accept_switch"
@@ -50,7 +51,7 @@
 		android:layout_width="48dp"
 		android:layout_height="wrap_content"
 		android:layout_marginHorizontal="4dp"
-		android:drawableRight="@drawable/ic_circular_delete_forever"
+		android:drawableEnd="@drawable/ic_circular_delete_forever"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintRight_toRightOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />

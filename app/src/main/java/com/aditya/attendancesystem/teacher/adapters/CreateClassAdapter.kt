@@ -16,7 +16,7 @@ import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
-class CreateClassAdapter(private val context: Context, private val imageUrls: ArrayList<String>, private val teacherCreateClassName: TextInputLayout, val teacherCreateProgressLayout: ConstraintLayout, ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CreateClassAdapter(private val context: Context, private val imageUrls: ArrayList<String>, private val teacherCreateClassName: TextInputLayout, private val teacherCreateProgressLayout: ConstraintLayout, ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	companion object{
 		private const val TAG = "ClassesAdapter"
@@ -67,17 +67,13 @@ class CreateClassAdapter(private val context: Context, private val imageUrls: Ar
 	
 	
 	
+	
 	private fun createClass(position: Int, className: String) {
 		teacherCreateProgressLayout.visibility = View.VISIBLE
 		
 		val db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString())
 		
-		val data = mapOf(
-			className to hashMapOf(
-				className to imageUrls[position],
-			)
-		)
-		db.update(data)
+		db.update(className, imageUrls[position])
 			.addOnSuccessListener {
 				teacherCreateProgressLayout.visibility = View.GONE
 				AlertDialog.Builder(teacherCreateClassName.context)
@@ -91,17 +87,32 @@ class CreateClassAdapter(private val context: Context, private val imageUrls: Ar
 					.show()
 			}
 			.addOnFailureListener {
-				AlertDialog.Builder(teacherCreateClassName.context)
-					.setTitle("Failure")
-					.setMessage(it.localizedMessage)
-					.setCancelable(false)
-					.setPositiveButton("Back to Classes") { _, _ ->
-						val context: Context = context
-						(context as CreateNewClass).finish()
+				db.set(mapOf(className to imageUrls[position]))
+					.addOnSuccessListener {
+						teacherCreateProgressLayout.visibility = View.GONE
+						AlertDialog.Builder(teacherCreateClassName.context)
+							.setTitle("Successful")
+							.setMessage("Class \"$className\" created successfully")
+							.setCancelable(false)
+							.setPositiveButton("Back to Homepage") { _, _ ->
+								val context: Context = context
+								(context as CreateNewClass).finish()
+							}
+							.show()
 					}
-					.show()
+					.addOnFailureListener {
+						AlertDialog.Builder(teacherCreateClassName.context)
+							.setTitle("Failure")
+							.setMessage(it.localizedMessage)
+							.setCancelable(false)
+							.setPositiveButton("Back to Classes") { _, _ ->
+								val context: Context = context
+								(context as CreateNewClass).finish()
+							}
+							.show()
+					}
 			}
+		
 	}
-	
 	
 }

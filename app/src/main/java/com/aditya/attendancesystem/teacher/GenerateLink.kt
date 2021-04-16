@@ -22,7 +22,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.aditya.attendancesystem.BuildConfig
 import com.aditya.attendancesystem.R
 import com.aditya.attendancesystem.databinding.ActivityTeacherGenerateLinkBinding
-import com.aditya.attendancesystem.teacher.helperclasses.AttendanceLinkDataClass
+import com.aditya.attendancesystem.teacher.helperclasses.DynamicLinkModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.CircleOptions
@@ -43,7 +43,6 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.HashMap
-import kotlin.concurrent.schedule
 import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
@@ -252,8 +251,18 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 		val time = "$startHour:$startMinute"
 		val docId = "$year$month${day}_$startHour$startMinute"
 		
-		val attendanceLinkDataClass = AttendanceLinkDataClass(docId, 0, lectureDate, lectureDuration?.replace("[^0-9]".toRegex(), "")?.toInt(), true, time)
-		
+		val attendanceLinkDataClass = DynamicLinkModel(
+			id = docId,
+			count = 0,
+			date = lectureDate,
+			duration = lectureDuration?.replace("[^0-9]".toRegex(), "")?.toInt(),
+			geoPoint = GeoPoint(0.0, 0.0),
+			isActivated = true,
+			isClassroomActivated = false,
+			link = "",
+			radius = 0,
+			time = time
+		)
 		if(binding.generateClassroomActivationSwitch.isChecked) {
 			with(attendanceLinkDataClass) {
 				isClassroomActivated = true
@@ -301,8 +310,8 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 						}
 						val shareIntent = Intent.createChooser(sendIntent, null)
 						startActivity(shareIntent)
+						finish()
 					}
-				finish()
 			}
 			.addOnFailureListener {
 				Toast.makeText(applicationContext, it.localizedMessage, Toast.LENGTH_LONG).show()

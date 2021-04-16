@@ -1,14 +1,13 @@
 package com.aditya.attendancesystem.teacher.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.aditya.attendancesystem.databinding.TeacherAdapterStudentListBinding
-import com.aditya.attendancesystem.teacher.helperclasses.StudentAttendanceRecord
+import com.aditya.attendancesystem.teacher.helperclasses.StudentAttendanceModel
 import java.util.*
 
-class StudentListAdapter(private val className: String, private val verifiedStudentsList: ArrayList<StudentAttendanceRecord>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class StudentListAdapter(private val className: String, private val verifiedStudentsList: ArrayList<StudentAttendanceModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	companion object {
 		private const val TAG = "StudentListAdapter"
@@ -24,9 +23,9 @@ class StudentListAdapter(private val className: String, private val verifiedStud
 		holder as ViewHolder
 		with(holder.binding) {
 			"${position.plus(1)} : ".also { listSrNo.text = it }
-			listName.text = verifiedStudentsList[position].Name
-			listRollNumber.text = verifiedStudentsList[position].RollNumber
-			listEmail.text = verifiedStudentsList[position].Email
+			listName.text = verifiedStudentsList[position].name
+			listRollNumber.text = verifiedStudentsList[position].rollNumber
+			listEmail.text = verifiedStudentsList[position].email
 			if(verifiedStudentsList[position].attendanceCount == 1) {
 				"${verifiedStudentsList[position].attendanceCount} lecture".also { listAttendance.text = it }
 			} else {

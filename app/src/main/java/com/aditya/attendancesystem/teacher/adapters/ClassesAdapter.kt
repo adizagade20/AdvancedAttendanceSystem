@@ -11,14 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.aditya.attendancesystem.databinding.TeacherAdapterClassesBinding
 import com.aditya.attendancesystem.teacher.ClassHomePage
-import com.aditya.attendancesystem.teacher.helperclasses.ClassListDataClass
+import com.aditya.attendancesystem.teacher.helperclasses.ClassNameImageModel
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 
 
 @SuppressLint("ApplySharedPref")
-class ClassesAdapter(private val classes: ArrayList<ClassListDataClass>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ClassesAdapter(private val classNameImageModels: ArrayList<ClassNameImageModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	companion object{
 		private const val TAG = "ClassesAdapter"
@@ -34,12 +34,12 @@ class ClassesAdapter(private val classes: ArrayList<ClassListDataClass>) : Recyc
 		holder as ViewHolder
 		with(holder.binding) {
 			Picasso.get()
-				.load(Uri.parse(classes[position].imageLink))
+				.load(Uri.parse(classNameImageModels[position].imageLink))
 				.resize(0, 150)
 				.into(teacherAdapterClassesRecyclerImageView, object : Callback {
 					override fun onSuccess() {
 						teacherAdapterClassesRecyclerImageProgress.visibility = View.GONE
-						teacherAdapterClassesRecyclerTextView.text = classes[position].className
+						teacherAdapterClassesRecyclerTextView.text = classNameImageModels[position].className
 					}
 					override fun onError(e: Exception?) {
 						if (e != null) {
@@ -51,9 +51,9 @@ class ClassesAdapter(private val classes: ArrayList<ClassListDataClass>) : Recyc
 			
 			root.setOnClickListener {
 				val intent = Intent(root.context, ClassHomePage::class.java)
-				root.context.getSharedPreferences("classDetails", AppCompatActivity.MODE_PRIVATE).edit().apply {
-					putString("className", classes[position].className)
-					putString("classImage", classes[position].imageLink)
+				root.context.getSharedPreferences("ClassDetails", AppCompatActivity.MODE_PRIVATE).edit().apply {
+					putString("className", classNameImageModels[position].className)
+					putString("classImage", classNameImageModels[position].imageLink)
 					commit()
 				}
 				root.context.startActivity(intent)
@@ -63,7 +63,7 @@ class ClassesAdapter(private val classes: ArrayList<ClassListDataClass>) : Recyc
 	
 	
 	override fun getItemCount(): Int {
-		return classes.size
+		return classNameImageModels.size
 	}
 	
 	

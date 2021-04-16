@@ -59,7 +59,7 @@ class Login : AppCompatActivity() {
 					isDeepLink = true
 					deepLink = pendingDynamicLinkData.link!!
 					Log.d(TAG, "onStart: $deepLink")
-					getSharedPreferences("dynamicLink", MODE_PRIVATE).edit().apply {
+					getSharedPreferences("DynamicLink", MODE_PRIVATE).edit().apply {
 						putString("privateKey", deepLink.getQueryParameter("privateKey"))
 						putString("className", deepLink.getQueryParameter("className"))
 						putString("date", deepLink.getQueryParameter("date"))
@@ -69,7 +69,7 @@ class Login : AppCompatActivity() {
 				
 				val user = Firebase.auth.currentUser
 				if (user != null) {
-					val role = getSharedPreferences("UserData", MODE_PRIVATE).getString("Role", null)
+					val role = getSharedPreferences("UserData", MODE_PRIVATE).getString("role", null)
 					if(role == "Student") {
 						val intent = Intent(this, com.aditya.attendancesystem.student.RecordAttendance::class.java)
 						intent.putExtra("isDeepLink", isDeepLink)
@@ -129,7 +129,7 @@ class Login : AppCompatActivity() {
 				db.get()
 					.addOnSuccessListener {
 						Log.d(TAG, "loginUser: $it")
-						if (it["Role"] == "Student") {
+						if (it["role"] == "Student") {
 							writeToSharedPreferences(it)
 							val intent = Intent(this, com.aditya.attendancesystem.student.RecordAttendance::class.java)
 							intent.putExtra("isDeepLink", isDeepLink)
@@ -142,7 +142,7 @@ class Login : AppCompatActivity() {
 				db.get()
 					.addOnSuccessListener {
 						Log.d(TAG, "loginUser: $it")
-						if (it["Role"] == "Teacher") {
+						if (it["role"] == "Teacher") {
 							writeToSharedPreferences(it)
 							val intent = Intent(this, com.aditya.attendancesystem.teacher.Home::class.java)
 							intent.putExtra("isDeepLink", isDeepLink)
@@ -160,11 +160,11 @@ class Login : AppCompatActivity() {
 	
 	private fun writeToSharedPreferences(it : DocumentSnapshot) {
 		getSharedPreferences("UserData", MODE_PRIVATE).edit().apply {
-			putString("Name", it["Name"].toString())
-			putString("Phone", it["Phone"].toString())
-			putString("Email", it["Email"].toString())
-			putString("Role", it["Role"].toString())
-			putString("RollNumber", it["RollNumber"].toString())
+			putString("name", it["name"].toString())
+			putString("phone", it["phone"].toString())
+			putString("email", it["email"].toString())
+			putString("role", it["role"].toString())
+			putString("rollNumber", it["rollNumber"].toString())
 			commit()
 		}
 	}

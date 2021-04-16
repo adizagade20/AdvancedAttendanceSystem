@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aditya.attendancesystem.databinding.ActivityTeacherVerificationPendingBinding
 import com.aditya.attendancesystem.teacher.adapters.VerificationPendingAdapter
-import com.aditya.attendancesystem.teacher.helperclasses.StudentDataVerification
+import com.aditya.attendancesystem.teacher.helperclasses.StudentDataModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ListenerRegistration
@@ -23,7 +23,6 @@ class VerificationPending : AppCompatActivity() {
 	}
 	
 	private lateinit var className: String
-	private lateinit var classImage: String
 	
 	private lateinit var listener: ListenerRegistration
 	
@@ -38,8 +37,7 @@ class VerificationPending : AppCompatActivity() {
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 		supportActionBar?.title = "Pending Requests"
 		
-		className = getSharedPreferences("classDetails", MODE_PRIVATE).getString("className", "").toString()
-		classImage = getSharedPreferences("classImages", MODE_PRIVATE).getString(className, "").toString()
+		className = getSharedPreferences("ClassDetails", MODE_PRIVATE).getString("className", "").toString()
 		
 		getStudentList()
 		
@@ -48,7 +46,7 @@ class VerificationPending : AppCompatActivity() {
 	
 	private fun getStudentList() {
 		val db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className).document("students").collection("verification_pending")
-		val studentsList = ArrayList<StudentDataVerification>()
+		val studentsList = ArrayList<StudentDataModel>()
 		val adapter = VerificationPendingAdapter(className, studentsList)
 		
 		listener = db.addSnapshotListener { value, error ->
@@ -67,29 +65,27 @@ class VerificationPending : AppCompatActivity() {
 					when (dc.type) {
 						DocumentChange.Type.ADDED -> {
 							if (dc.document.exists()) {
-								val obj = dc.document.toObject<StudentDataVerification>()
+								val obj = dc.document.toObject<StudentDataModel>()
 								obj.id = dc.document.id
 								studentsList.add(dc.newIndex, obj)
-								adapter.notifyItemInserted(dc.newIndex)
 							}
 						}
 						DocumentChange.Type.MODIFIED -> {
 							if (dc.document.exists()) {
-								val obj = dc.document.toObject<StudentDataVerification>()
+								val obj = dc.document.toObject<StudentDataModel>()
 								obj.id = dc.document.id
 								studentsList.add(dc.newIndex, obj)
-								adapter.notifyItemChanged(dc.newIndex)
 							}
 						}
 						DocumentChange.Type.REMOVED -> {
 							studentsList.removeAt(dc.oldIndex)
-							adapter.notifyItemRemoved(dc.oldIndex)
 						}
 					}
 				}
 			}
 			binding.verifiedRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
 			binding.verifiedRecyclerView.adapter = adapter
+			listener.remove()
 		}
 	}
 	

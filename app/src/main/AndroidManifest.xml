@@ -23,7 +23,9 @@
 				
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
-			<intent-filter android:autoVerify="true" tools:targetApi="m">
+			<intent-filter
+				android:autoVerify="true"
+				tools:targetApi="m">
 				<action android:name="android.intent.action.VIEW" />
 				
 				<category android:name="android.intent.category.DEFAULT" />
@@ -71,9 +73,13 @@
 		<activity
 			android:name=".teacher.GenerateLink"
 			android:parentActivityName=".teacher.ClassHomePage" />
-		<activity android:name=".teacher.VerificationPending"
+		<activity
+			android:name=".teacher.VerificationPending"
 			android:parentActivityName=".teacher.ClassHomePage" />
-		<activity android:name=".teacher.StudentList"
+		<activity
+			android:name=".teacher.StudentList"
+			android:parentActivityName=".teacher.ClassHomePage" />
+		<activity android:name=".teacher.ExportAsCSV"
 			android:parentActivityName=".teacher.ClassHomePage" />
 		
 		

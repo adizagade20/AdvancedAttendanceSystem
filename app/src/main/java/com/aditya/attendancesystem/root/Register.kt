@@ -118,13 +118,13 @@ class Register : AppCompatActivity() {
 				val db = Firebase.firestore.collection(if (binding.registerRoleStudent.isChecked) "students" else "teachers").document("${itAuth.user?.uid}")
 				val userData = HashMap<String, Any>()
 				with(binding) {
-					userData["Name"] = registerName.editText?.text.toString()
-					userData["Phone"] = registerPhone.editText?.text.toString()
-					userData["Email"] = registerEmail.editText?.text.toString()
-					userData["Password"] = registerPassword.editText?.text.toString()
-					userData["Role"] = if (binding.registerRoleStudent.isChecked) "Student" else "Teacher"
+					userData["name"] = registerName.editText?.text.toString()
+					userData["phone"] = registerPhone.editText?.text.toString()
+					userData["email"] = registerEmail.editText?.text.toString()
+					userData["password"] = registerPassword.editText?.text.toString()
+					userData["role"] = if (binding.registerRoleStudent.isChecked) "Student" else "Teacher"
 					if (registerRollNo.editText?.text.toString() != "")
-						userData["RollNumber"] = registerRollNo.editText?.text.toString()
+						userData["rollNumber"] = registerRollNo.editText?.text.toString()
 				}
 				writeToSharedPreferences()
 				db.set(userData)
@@ -155,11 +155,11 @@ class Register : AppCompatActivity() {
 		with(binding) {
 			val sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE)
 			val editor = sharedPreferences.edit()
-			editor.putString("Name", registerName.editText?.text.toString())
-			editor.putString("Phone", registerPhone.editText?.text.toString())
-			editor.putString("Email", registerEmail.editText?.text.toString())
-			editor.putString("Role", if (binding.registerRoleStudent.isChecked) "Student" else "Teacher")
-			editor.putString("RollNumber", registerRollNo.editText?.text.toString())
+			editor.putString("name", registerName.editText?.text.toString())
+			editor.putString("phone", registerPhone.editText?.text.toString())
+			editor.putString("email", registerEmail.editText?.text.toString())
+			editor.putString("role", if (binding.registerRoleStudent.isChecked) "Student" else "Teacher")
+			editor.putString("rollNumber", registerRollNo.editText?.text.toString())
 			editor.apply()
 		}
 	}

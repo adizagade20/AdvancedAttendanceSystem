@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.aditya.attendancesystem.R
 import com.aditya.attendancesystem.databinding.ActivityTeacherClassHomePageBinding
 import com.aditya.attendancesystem.teacher.adapters.AttendanceLinksAdapter
-import com.aditya.attendancesystem.teacher.helperclasses.AttendanceLinkDataClass
+import com.aditya.attendancesystem.teacher.helperclasses.DynamicLinkModel
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentChange
@@ -52,8 +52,8 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 		binding = ActivityTeacherClassHomePageBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 		
-		className = getSharedPreferences("classDetails", MODE_PRIVATE).getString("className", "").toString()
-		classImage = getSharedPreferences("classImages", MODE_PRIVATE).getString(className, "").toString()
+		className = getSharedPreferences("ClassDetails", MODE_PRIVATE).getString("className", "").toString()
+		classImage = getSharedPreferences("ClassImages", MODE_PRIVATE).getString(className, "").toString()
 		
 		setSupportActionBar(binding.classHomePageToolbar)
 		supportActionBar?.title = className
@@ -64,9 +64,6 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 			if (abs(verticalOffset) == binding.classHomePageAppbarLayout.totalScrollRange) {
 				binding.classHomePageImageView.visibility = View.GONE
 				binding.classHomePageCircleMenu.visibility = View.GONE
-			} else if (verticalOffset == 0) {
-				binding.classHomePageImageView.visibility = View.VISIBLE
-				binding.classHomePageCircleMenu.visibility = View.VISIBLE
 			} else {
 				binding.classHomePageImageView.visibility = View.VISIBLE
 				binding.classHomePageCircleMenu.visibility = View.VISIBLE
@@ -80,12 +77,6 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 		
 		CoroutineScope(Dispatchers.IO).launch {
 			getAllAttendances()
-		}
-		
-		binding.classHomePageFloating.setOnClickListener {
-			val intent = Intent(this, GenerateLink::class.java)
-			intent.putExtra("className", className)
-			startActivity(intent)
 		}
 		
 		circleMenuConfigure()
@@ -104,12 +95,16 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 			// #ff8a5c -> #fff591
 			// binding.root.setBackgroundColor(Color.parseColor("#ecfffb"))
 			
-			setMainMenu(ResourcesCompat.getColor(resources, R.color.teal_200, null), R.drawable.ic_menu, R.drawable.ic_cancel)
-			addSubMenu(Color.parseColor("#ba53de"), R.drawable.ic_generate)
-			addSubMenu(Color.parseColor("#ff4b32"), R.drawable.ic_circular_delete_forever)
-			addSubMenu(Color.parseColor("#ff8a5c"), R.drawable.ic_circular_export)
-			addSubMenu(Color.parseColor("#88bef5"), R.drawable.ic_circular_verification_done)
-			addSubMenu(Color.parseColor("#83e85a"), R.drawable.ic_circular_verification_pending)
+			setMainMenu(
+				ResourcesCompat.getColor(resources, R.color.teal_200, null),
+				ResourcesCompat.getDrawable(resources, R.drawable.ic_menu, null),
+				ResourcesCompat.getDrawable(resources, R.drawable.ic_cancel, null)
+			)
+			addSubMenu(Color.parseColor("#ba53de"), ResourcesCompat.getDrawable(resources, R.drawable.ic_generate, null))
+			addSubMenu(Color.parseColor("#ff4b32"),ResourcesCompat.getDrawable(resources,  R.drawable.ic_circular_delete_forever, null))
+			addSubMenu(Color.parseColor("#ff8a5c"), ResourcesCompat.getDrawable(resources, R.drawable.ic_circular_export, null))
+			addSubMenu(Color.parseColor("#88bef5"), ResourcesCompat.getDrawable(resources, R.drawable.ic_circular_verification_done, null))
+			addSubMenu(Color.parseColor("#83e85a"), ResourcesCompat.getDrawable(resources, R.drawable.ic_circular_verification_pending, null))
 			
 			setOnMenuSelectedListener {
 				Timer().schedule(1000) {
@@ -119,6 +114,10 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 								val intent = Intent(this@ClassHomePage, GenerateLink::class.java)
 								intent.putExtra("className", className)
 								startActivity(intent)
+							}
+							1 -> {}
+							2 -> {
+								startActivity(Intent(this@ClassHomePage, ExportAsCSV::class.java))
 							}
 							3 -> startActivity(Intent(this@ClassHomePage, StudentList::class.java))
 							4 ->  startActivity(Intent(this@ClassHomePage, VerificationPending::class.java))
@@ -135,14 +134,16 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 	
 	override fun onStop() {
 		super.onStop()
-		job.cancel()
-		listener.remove()
+		try {
+			job.cancel()
+			listener.remove()
+		} catch (e: Exception) {}
 	}
 	
 	
 	private suspend fun getAllAttendances() = withContext(Dispatchers.IO) {
-		binding.classHomePageExtendedInclude.classHomePageExtendedRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
-		val attendanceEntries = ArrayList<AttendanceLinkDataClass>()
+		binding.classHomePageExtendedRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
+		val attendanceEntries = ArrayList<DynamicLinkModel>()
 		val db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className)
 		val adapter = AttendanceLinksAdapter(attendanceEntries, className, db)
 		listener = db.addSnapshotListener { value, error ->
@@ -155,7 +156,7 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 					when (dc.type) {
 							DocumentChange.Type.ADDED -> {
 								if (dc.document.exists()) {
-									val obj = dc.document.toObject<AttendanceLinkDataClass>()
+									val obj = dc.document.toObject<DynamicLinkModel>()
 									obj.id = dc.document.id
 									attendanceEntries.add(dc.newIndex, obj)
 									adapter.notifyItemInserted(dc.newIndex)
@@ -163,7 +164,7 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 							}
 						DocumentChange.Type.MODIFIED -> {
 							if(dc.document.exists()) {
-								val obj = dc.document.toObject<AttendanceLinkDataClass>()
+								val obj = dc.document.toObject<DynamicLinkModel>()
 								obj.id = dc.document.id
 								attendanceEntries[dc.newIndex] = obj
 								adapter.notifyItemChanged(dc.newIndex)
@@ -176,12 +177,8 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 					}
 				}
 			}
-			binding.classHomePageExtendedInclude.classHomePageExtendedRecyclerView.adapter = adapter
-		}
-		Timer().schedule(1000) {
-			runOnUiThread {
-				listener.remove()
-			}
+			binding.classHomePageExtendedRecyclerView.adapter = adapter
+			listener.remove()
 		}
 	}
 	

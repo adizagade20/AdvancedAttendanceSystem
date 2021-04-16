@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aditya.attendancesystem.databinding.ActivityTeacherStudentListBinding
 import com.aditya.attendancesystem.teacher.adapters.StudentListAdapter
-import com.aditya.attendancesystem.teacher.helperclasses.StudentAttendanceRecord
+import com.aditya.attendancesystem.teacher.helperclasses.StudentAttendanceModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ListenerRegistration
@@ -14,6 +14,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
+import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class StudentList : AppCompatActivity(), CoroutineScope {
@@ -42,8 +43,8 @@ class StudentList : AppCompatActivity(), CoroutineScope {
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 		supportActionBar?.title = "StudentList"
 		
-		className = getSharedPreferences("classDetails", MODE_PRIVATE).getString("className", "").toString()
-		classImage = getSharedPreferences("classImages", MODE_PRIVATE).getString(className, "").toString()
+		className = getSharedPreferences("ClassDetails", MODE_PRIVATE).getString("className", "").toString()
+		classImage = getSharedPreferences("ClassImages", MODE_PRIVATE).getString(className, "").toString()
 		supportActionBar?.subtitle  = className
 		
 		CoroutineScope(Dispatchers.IO).launch {
@@ -55,7 +56,7 @@ class StudentList : AppCompatActivity(), CoroutineScope {
 	
 	private suspend fun getStudentList() = withContext(Dispatchers.IO) {
 		val db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className).document("students").collection("verified")
-		val verifiedStudentsList = ArrayList<StudentAttendanceRecord>()
+		val verifiedStudentsList = ArrayList<StudentAttendanceModel>()
 		
 		runOnUiThread {
 			binding.studentListRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
@@ -75,14 +76,14 @@ class StudentList : AppCompatActivity(), CoroutineScope {
 					when (dc.type) {
 						DocumentChange.Type.ADDED -> {
 							if (dc.document.exists()) {
-								val obj = dc.document.toObject<StudentAttendanceRecord>()
+								val obj = dc.document.toObject<StudentAttendanceModel>()
 								obj.id = dc.document.id
 								verifiedStudentsList.add(dc.newIndex, obj)
 							}
 						}
 						DocumentChange.Type.MODIFIED -> {
 							if (dc.document.exists()) {
-								val obj = dc.document.toObject<StudentAttendanceRecord>()
+								val obj = dc.document.toObject<StudentAttendanceModel>()
 								obj.id = dc.document.id
 								verifiedStudentsList.add(dc.newIndex, obj)
 							}
@@ -92,13 +93,13 @@ class StudentList : AppCompatActivity(), CoroutineScope {
 						}
 					}
 				}
-				getAttendanceLinks(verifiedStudentsList)
+				getAttendanceRecords(verifiedStudentsList)
 			}
 		}
 	}
 	
 	
-	private fun getAttendanceLinks(verifiedStudentsList: ArrayList<StudentAttendanceRecord>) {
+	private fun getAttendanceRecords(verifiedStudentsList: ArrayList<StudentAttendanceModel>) {
 		val db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className)
 		val attendanceLinks = ArrayList<String>()
 		
@@ -129,38 +130,36 @@ class StudentList : AppCompatActivity(), CoroutineScope {
 	}
 	
 	
-	private fun getAttendances(verifiedStudentsList: ArrayList<StudentAttendanceRecord>, attendanceLinks: ArrayList<String>) {
-		for(entry in attendanceLinks) {
-			listener = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className).document(entry)
-				.collection("attendance").document("attendance")
-				.addSnapshotListener { value, error ->
+	private fun getAttendances(verifiedStudentsList: ArrayList<StudentAttendanceModel>, attendanceLinks: ArrayList<String>) {
+		for ((index, student) in verifiedStudentsList.withIndex()) {
+			for (link in attendanceLinks) {
+				val db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString())
+					.collection(className).document(link).collection("attendance").document("attendance")
+				db.addSnapshotListener { value, error ->
 					if (error != null) {
-						Log.d(TAG, "getAttendances: ${error.localizedMessage}")
-						Log.d(TAG, "getAttendances: $error")
+						Log.d(TAG, "getStudentWiseAttendanceRecords: $error")
 						return@addSnapshotListener
 					}
 					
-					if(value != null) {
-						for((index, student) in verifiedStudentsList.withIndex()) {
-							if(value.contains(student.RollNumber.toString())) {
-								verifiedStudentsList[index].attendanceCount = verifiedStudentsList[index].attendanceCount.plus(1)
-								verifiedStudentsList[index].attendanceDates?.add(value.get("").toString())
-								Log.d(TAG, "getAttendances: verifiedStudentsList: $verifiedStudentsList")
-								runOnUiThread {
-									binding.studentListRecyclerView.adapter?.notifyItemChanged(index)
-								}
-							}
+					if (value != null) {
+						if (value.getBoolean(student.rollNumber.toString()) == true) {
+							student.attendanceCount += 1
+							binding.studentListRecyclerView.adapter?.notifyItemChanged(index)
 						}
 					}
 				}
+				
+			}
 		}
 	}
 	
 	
 	override fun onStop() {
 		super.onStop()
-		job.cancel()
-		listener.remove()
+		try {
+			job.cancel()
+			listener.remove()
+		} catch (e: Exception) {}
 	}
 	
 	

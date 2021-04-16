@@ -7,15 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.aditya.attendancesystem.databinding.TeacherAdapterAttendanceLinksBinding
-import com.aditya.attendancesystem.teacher.helperclasses.AttendanceLinkDataClass
+import com.aditya.attendancesystem.teacher.helperclasses.DynamicLinkModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
-class AttendanceLinksAdapter(private val attendanceEntries: ArrayList<AttendanceLinkDataClass>, private val className: String, private val db: CollectionReference) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AttendanceLinksAdapter(private val dynamicEntries: ArrayList<DynamicLinkModel>, private val className: String, private val db: CollectionReference) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	companion object {
 		private const val TAG = "AttendanceLinksAdapter"
@@ -29,16 +26,15 @@ class AttendanceLinksAdapter(private val attendanceEntries: ArrayList<Attendance
 	
 	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 		holder as ViewHolder
-		if(attendanceEntries[position].id == "students") {
+		if(dynamicEntries[position].id == "students") {
 			holder.binding.root.visibility = View.GONE
 		}
 		with(holder.binding) {
-				linksDate.text = attendanceEntries[position].date
-				linksTime.text = attendanceEntries[position].time
-				linksLink.text = attendanceEntries[position].link
-				linksActivationSwitch.isChecked = attendanceEntries[position].isActivated == true
-				"${attendanceEntries[position].count} present".also { linksAttendance.text = it }
-				linksShare.isEnabled = attendanceEntries[position].isActivated == true
+				linksDate.text = dynamicEntries[position].date
+				linksTime.text = dynamicEntries[position].time
+				linksLink.text = dynamicEntries[position].link
+				linksActivationSwitch.isChecked = dynamicEntries[position].isActivated == true
+				linksShare.isEnabled = dynamicEntries[position].isActivated == true
 				
 				linksActivationSwitch.setOnCheckedChangeListener { _, isChecked ->
 					Log.d(TAG, "onBindViewHolder: $isChecked")
@@ -46,7 +42,7 @@ class AttendanceLinksAdapter(private val attendanceEntries: ArrayList<Attendance
 				}
 				
 				linksShare.setOnClickListener {
-					val text = "The attendance link for $className for date ${attendanceEntries[position].date} and time ${attendanceEntries[position].time} is ${attendanceEntries[position].link}"
+					val text = "The attendance link for $className for date ${dynamicEntries[position].date} and time ${dynamicEntries[position].time} is ${dynamicEntries[position].link}"
 					val sendIntent = Intent().apply {
 						action = Intent.ACTION_SEND
 						putExtra(Intent.EXTRA_TITLE, "Attendance for $className")
@@ -61,7 +57,7 @@ class AttendanceLinksAdapter(private val attendanceEntries: ArrayList<Attendance
 		}
 	
 	override fun getItemCount(): Int {
-		return attendanceEntries.size
+		return dynamicEntries.size
 	}
 	
 	
@@ -72,19 +68,17 @@ class AttendanceLinksAdapter(private val attendanceEntries: ArrayList<Attendance
 		switch.isEnabled = false
 		linksShare.isEnabled = false
 		
-		val db = db.document(attendanceEntries[position].id.toString())
-		db.update("isActivated", !attendanceEntries[position].isActivated!!)
+		val db = db.document(dynamicEntries[position].id.toString())
+		db.update("isActivated", !dynamicEntries[position].isActivated!!)
 			.addOnSuccessListener {
 				switch.isEnabled = true
-				attendanceEntries[position].isActivated = !attendanceEntries[position].isActivated!!
+				dynamicEntries[position].isActivated = !dynamicEntries[position].isActivated!!
 				
-				linksShare.isEnabled = attendanceEntries[position].isActivated == true
+				linksShare.isEnabled = dynamicEntries[position].isActivated == true
 				
 			}
 			.addOnFailureListener {
 				Log.e(TAG, "toggleLinkActivation: $it")
-				switch.performClick()
-				switch.isEnabled = true
 			}
 	}
 	

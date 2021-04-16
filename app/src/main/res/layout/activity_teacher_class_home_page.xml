@@ -9,7 +9,7 @@
 	<com.google.android.material.appbar.AppBarLayout
 		android:id="@+id/class_home_page_appbar_layout"
 		android:layout_width="match_parent"
-		android:layout_height="200dp"
+		android:layout_height="250dp"
 		android:fitsSystemWindows="true">
 		
 		<com.google.android.material.appbar.CollapsingToolbarLayout
@@ -44,30 +44,19 @@
 		android:layout_marginTop="24dp"
 		app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 		
-		<include
-			android:id="@+id/class_home_page_extended_include"
-			layout="@layout/activity_teacher_class_home_page_extended" />
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/class_home_page_extended_recycler_view"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
 	
 	</androidx.core.widget.NestedScrollView>
 	
-	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		android:id="@+id/class_home_page_floating"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginRight="30dp"
-		android:baselineAlignBottom="false"
-		android:src="@drawable/ic_add"
-		android:visibility="invisible"
-		app:fabSize="normal"
-		app:layout_anchor="@id/class_home_page_appbar_layout"
-		app:layout_anchorGravity="end|bottom" />
-	
 	<com.hitomi.cmlibrary.CircleMenu
 		android:id="@+id/class_home_page_circle_menu"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="280dp"
+		android:layout_height="280dp"
 		android:baselineAlignBottom="false"
 		app:layout_anchor="@id/class_home_page_appbar_layout"
-		app:layout_anchorGravity="end|bottom" />
+		app:layout_anchorGravity="end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

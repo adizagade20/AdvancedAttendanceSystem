@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import com.aditya.attendancesystem.databinding.TeacherAdapterVerificationPendingBinding
-import com.aditya.attendancesystem.teacher.helperclasses.StudentDataVerification
+import com.aditya.attendancesystem.teacher.helperclasses.StudentDataModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class VerificationPendingAdapter(private val className: String, private val studentsList: ArrayList<StudentDataVerification>) :
+class VerificationPendingAdapter(private val className: String, private val studentsList: ArrayList<StudentDataModel>) :
 	RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	companion object {
@@ -26,13 +26,12 @@ class VerificationPendingAdapter(private val className: String, private val stud
 	
 	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 		holder as ViewHolder
+		Log.d(TAG, "onBindViewHolder: $studentsList")
 		with(holder.binding) {
-			verifyName.text = studentsList[position].Name
-			verifyEmail.text = studentsList[position].Email
-			verifyRollNumber.text = studentsList[position].RollNumber.toString()
+			verifyName.text = studentsList[position].name
+			verifyEmail.text = studentsList[position].email
+			verifyRollNumber.text = studentsList[position].rollNumber.toString()
 			verifyAcceptSwitch.isChecked = false
-			
-			Log.d(TAG, "onBindViewHolder: ${studentsList[position]}")
 			
 			verifyAcceptSwitch.setOnCheckedChangeListener { buttonView, _ ->
 				verifyStudent(position, buttonView)
@@ -65,8 +64,8 @@ class VerificationPendingAdapter(private val className: String, private val stud
 					.collection("verified").document(studentsList[position].id.toString())
 				db.set(studentsList[position])
 					.addOnSuccessListener {
-						Log.d(TAG, "verifyStudent: Successful")
-						
+						studentsList.removeAt(position)
+						notifyItemRemoved(position)
 						switch.isEnabled = true
 					}
 			}
@@ -79,7 +78,8 @@ class VerificationPendingAdapter(private val className: String, private val stud
 			.collection("verification_pending").document(studentsList[position].id.toString())
 		db.delete()
 			.addOnSuccessListener {
-				Log.d(TAG, "deleteRequest: Deleted successfully")
+				studentsList.removeAt(position)
+				notifyItemRemoved(position)
 			}
 	}
 	
