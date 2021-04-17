@@ -2,21 +2,25 @@ package com.aditya.attendancesystem.teacher
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.*
 import com.aditya.attendancesystem.databinding.ActivityTeacherHomeBinding
 import com.aditya.attendancesystem.teacher.adapters.ClassesAdapter
+import com.aditya.attendancesystem.teacher.helperclasses.AttendanceDisablerWorker
 import com.aditya.attendancesystem.teacher.helperclasses.ClassNameImageModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
-import java.lang.Exception
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
+
 
 class Home : AppCompatActivity(), CoroutineScope {
 	
@@ -47,6 +51,8 @@ class Home : AppCompatActivity(), CoroutineScope {
 		binding.teacherHomeFloatingButton.setOnClickListener {
 			startActivity(Intent(applicationContext, CreateNewClass::class.java))
 		}
+		
+		
 	}
 	
 	
@@ -114,5 +120,6 @@ class Home : AppCompatActivity(), CoroutineScope {
 			job.cancel()
 		} catch (e: Exception) {}
 	}
+	
 	
 }

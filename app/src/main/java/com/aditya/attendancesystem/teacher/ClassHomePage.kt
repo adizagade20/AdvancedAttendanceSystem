@@ -84,7 +84,6 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 	}
 	
 	
-	
 	private fun circleMenuConfigure() {
 		with(binding.classHomePageCircleMenu) {
 			
@@ -129,9 +128,6 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 	}
 	
 	
-	
-	
-	
 	override fun onStop() {
 		super.onStop()
 		try {
@@ -145,7 +141,7 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 		binding.classHomePageExtendedRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
 		val attendanceEntries = ArrayList<DynamicLinkModel>()
 		val db = Firebase.firestore.collection("attendance").document(Firebase.auth.uid.toString()).collection(className)
-		val adapter = AttendanceLinksAdapter(attendanceEntries, className, db)
+		val adapter = AttendanceLinksAdapter(applicationContext, attendanceEntries, className, db)
 		listener = db.addSnapshotListener { value, error ->
 			if (error != null) {
 				Log.e(TAG, "getAllAttendances: ${error.localizedMessage}")
@@ -163,11 +159,13 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 								}
 							}
 						DocumentChange.Type.MODIFIED -> {
-							if(dc.document.exists()) {
-								val obj = dc.document.toObject<DynamicLinkModel>()
-								obj.id = dc.document.id
-								attendanceEntries[dc.newIndex] = obj
-								adapter.notifyItemChanged(dc.newIndex)
+							if (dc.document.exists()) {
+								if (!dc.document.metadata.isFromCache) {
+									val obj = dc.document.toObject<DynamicLinkModel>()
+									obj.id = dc.document.id
+									attendanceEntries[dc.newIndex] = obj
+									adapter.notifyItemChanged(dc.newIndex)
+								}
 							}
 						}
 						DocumentChange.Type.REMOVED -> {
@@ -178,7 +176,7 @@ class ClassHomePage : AppCompatActivity(), CoroutineScope {
 				}
 			}
 			binding.classHomePageExtendedRecyclerView.adapter = adapter
-			listener.remove()
+			
 		}
 	}
 	

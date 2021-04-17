@@ -19,9 +19,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.work.*
 import com.aditya.attendancesystem.BuildConfig
 import com.aditya.attendancesystem.R
 import com.aditya.attendancesystem.databinding.ActivityTeacherGenerateLinkBinding
+import com.aditya.attendancesystem.teacher.helperclasses.AttendanceDisablerWorker
 import com.aditya.attendancesystem.teacher.helperclasses.DynamicLinkModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
@@ -64,7 +66,7 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 	private var timeStamp: Long?= null
 	private val lectureTime = HashMap<String, Int>()
 	private var lectureDuration: String? = null
-	private var expireTime: String? = null
+	private var expireTime: Int?= null
 	private var radiusSelected: String? = null
 	private var latitudeMyLocation: Double?= null
 	private var longitudeMyLocation: Double?= null
@@ -132,7 +134,8 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 			val expireAdapter = ArrayAdapter(applicationContext, R.layout.support_simple_spinner_dropdown_item, expireTimeArray)
 			generateExpire.setAdapter(expireAdapter)
 			generateExpire.setOnItemClickListener { _, _, position, _ ->
-				expireTime = expireTimeArray[position]
+				expireTime = expireTimeArray[position].replace("[^0-9]".toRegex(), "").toInt()
+				Toast.makeText(applicationContext, expireTime.toString(), Toast.LENGTH_LONG).show()
 				generateExpireLayout.isErrorEnabled = false
 			}
 			
@@ -142,6 +145,7 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 					generateAdvanced.visibility = View.VISIBLE
 					generateExpireLayout.visibility = View.VISIBLE
 					generateRadiusLayout.visibility = View.VISIBLE
+					binding.generateNoteLayout.visibility = View.VISIBLE
 					
 					if (isPermissionGranted()) {
 						CoroutineScope(Dispatchers.Main).launch {
@@ -154,6 +158,7 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 					binding.generateAdvanced.visibility = View.INVISIBLE
 					binding.generateExpireLayout.visibility = View.INVISIBLE
 					binding.generateRadiusLayout.visibility = View.INVISIBLE
+					binding.generateNoteLayout.visibility = View.INVISIBLE
 				}
 			}
 			generateClassroomActivationSwitch.isChecked = true
@@ -308,6 +313,8 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 							flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
 							type = "text/plain"
 						}
+						registerExpireService(db)
+						
 						val shareIntent = Intent.createChooser(sendIntent, null)
 						startActivity(shareIntent)
 						finish()
@@ -321,7 +328,26 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 	}
 	
 	
-	
+	private fun registerExpireService(db: DocumentReference) {
+		val data = Data.Builder()
+			.putString("title", className)
+			.putString("description", lectureDate)
+			.putInt("period", expireTime!! / 5)
+			.putString("link", db.path)
+			.putString("date", lectureDate)
+			.build()
+		
+		val constraints = Constraints.Builder()
+			.setRequiredNetworkType(NetworkType.CONNECTED)
+			.build()
+		
+		val request = OneTimeWorkRequest.Builder(AttendanceDisablerWorker::class.java)
+			.setInputData(data)
+			.setConstraints(constraints)
+			.build()
+		
+		WorkManager.getInstance(applicationContext).enqueueUniqueWork(lectureDate!!, ExistingWorkPolicy.REPLACE, request)
+	}
 	
 	
 	
@@ -436,5 +462,6 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 			}
 		}
 	}
+	
 	
 }
