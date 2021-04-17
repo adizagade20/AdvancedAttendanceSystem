@@ -23,4 +23,5 @@
 	<string name="radius">Radius</string>
 	<string name="create">Create</string>
 	<string name="to_expire_link_keep_app_running_in_background">To expire link, keep app running in background</string>
+	<string name="logout">Logout</string>
 </resources>

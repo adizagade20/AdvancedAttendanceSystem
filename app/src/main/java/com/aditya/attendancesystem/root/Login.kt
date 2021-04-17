@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.aditya.attendancesystem.databinding.ActivityLoginBinding
@@ -30,9 +31,17 @@ class Login : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		binding = ActivityLoginBinding.inflate(layoutInflater)
+		if(Firebase.auth.currentUser == null) {
+			binding.root.visibility = View.VISIBLE
+		}
+		else {
+			supportActionBar?.hide()
+			return
+		}
 		setContentView(binding.root)
 		
 		supportActionBar?.title = "Login"
+		
 		
 		with(binding) {
 			
@@ -41,6 +50,7 @@ class Login : AppCompatActivity() {
 			}
 			
 			loginLogin.setOnClickListener {
+				loginLogin.cancelLoading()
 				verify()
 			}
 			
@@ -70,15 +80,16 @@ class Login : AppCompatActivity() {
 				val user = Firebase.auth.currentUser
 				if (user != null) {
 					val role = getSharedPreferences("UserData", MODE_PRIVATE).getString("role", null)
-					if(role == "Student") {
+					if (role == "Student") {
 						val intent = Intent(this, com.aditya.attendancesystem.student.RecordAttendance::class.java)
 						intent.putExtra("isDeepLink", isDeepLink)
 						startActivity(intent)
 						finish()
-					}
-					else if(role == "Teacher") {
+					} else if (role == "Teacher") {
 						val intent = Intent(this, com.aditya.attendancesystem.teacher.Home::class.java)
 						intent.putExtra("isDeepLink", isDeepLink)
+						intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+						overridePendingTransition(0, 0)
 						startActivity(intent)
 						finish()
 					}
@@ -92,29 +103,29 @@ class Login : AppCompatActivity() {
 		with(binding) {
 			if (loginEmail.editText?.text.toString() == "") {
 				loginEmail.error = "Can not be empty"
-			} else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(loginEmail.editText?.text.toString()).matches()) {
+			} else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(loginEmail.editText?.text.toString()).matches()) {
 				loginEmail.error = "Email not valid"
 				flag = false
-			} else if(android.util.Patterns.EMAIL_ADDRESS.matcher(loginEmail.editText?.text.toString()).matches()) {
+			} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(loginEmail.editText?.text.toString()).matches()) {
 				loginEmail.isErrorEnabled = false
 			}
 			
 			if (loginPassword.editText?.text.toString() == "") {
 				loginPassword.error = "Can not be empty"
 				flag = false
-			} else if(loginPassword.editText?.text.toString().length < 6) {
+			} else if (loginPassword.editText?.text.toString().length < 6) {
 				loginPassword.error = "Password must be minimum 6 characters"
+				flag = false
 			} else {
 				loginPassword.isErrorEnabled = false
 			}
 			
-			if(!flag)
+			if (!flag) {
 				return@with
-			
-			else if(flag) {
+			} else {
+				loginLogin.startLoading()
 				loginUser()
 			}
-			
 		}
 	}
 	
@@ -128,6 +139,7 @@ class Login : AppCompatActivity() {
 				var db = Firebase.firestore.collection("students").document(user.uid)
 				db.get()
 					.addOnSuccessListener {
+						binding.loginLogin.loadingSuccessful()
 						Log.d(TAG, "loginUser: $it")
 						if (it["role"] == "Student") {
 							writeToSharedPreferences(it)
@@ -141,6 +153,7 @@ class Login : AppCompatActivity() {
 				db = Firebase.firestore.collection("teachers").document(user.uid)
 				db.get()
 					.addOnSuccessListener {
+						binding.loginLogin.loadingSuccessful()
 						Log.d(TAG, "loginUser: $it")
 						if (it["role"] == "Teacher") {
 							writeToSharedPreferences(it)
@@ -152,13 +165,13 @@ class Login : AppCompatActivity() {
 					}
 			}
 			.addOnFailureListener {
-				Toast.makeText(applicationContext, it.localizedMessage, Toast.LENGTH_LONG).show()
-				Log.d(TAG, "loginUser: ${it.localizedMessage}")
+				binding.loginLogin.loadingFailed()
+				Toast.makeText(applicationContext, "No user found with these credentials", Toast.LENGTH_LONG).show()
 			}
 	}
 	
 	
-	private fun writeToSharedPreferences(it : DocumentSnapshot) {
+	private fun writeToSharedPreferences(it: DocumentSnapshot) {
 		getSharedPreferences("UserData", MODE_PRIVATE).edit().apply {
 			putString("name", it["name"].toString())
 			putString("phone", it["phone"].toString())

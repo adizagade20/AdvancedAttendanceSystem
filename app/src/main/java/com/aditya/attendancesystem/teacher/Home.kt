@@ -3,13 +3,17 @@ package com.aditya.attendancesystem.teacher
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
+import com.aditya.attendancesystem.R
 import com.aditya.attendancesystem.databinding.ActivityTeacherHomeBinding
+import com.aditya.attendancesystem.root.Login
 import com.aditya.attendancesystem.teacher.adapters.ClassesAdapter
 import com.aditya.attendancesystem.teacher.helperclasses.AttendanceDisablerWorker
 import com.aditya.attendancesystem.teacher.helperclasses.ClassNameImageModel
@@ -119,6 +123,24 @@ class Home : AppCompatActivity(), CoroutineScope {
 			classesListener.remove()
 			job.cancel()
 		} catch (e: Exception) {}
+	}
+	
+	
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.home_menu, menu)
+		return true
+	}
+	
+	
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when(item.itemId) {
+			R.id.home_logout -> {
+				Firebase.auth.signOut()
+				startActivity(Intent(this, Login::class.java))
+				finish()
+				}
+			}
+		return super.onOptionsItemSelected(item)
 	}
 	
 	

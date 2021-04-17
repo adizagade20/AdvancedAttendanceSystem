@@ -11,6 +11,9 @@ import com.aditya.attendancesystem.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.concurrent.schedule
 
 class Register : AppCompatActivity() {
 	
@@ -102,7 +105,7 @@ class Register : AppCompatActivity() {
 				
 				}
 			}
-			
+			registerRegister.startLoading()
 			createUser()
 			
 		}
@@ -129,11 +132,12 @@ class Register : AppCompatActivity() {
 				writeToSharedPreferences()
 				db.set(userData)
 					.addOnSuccessListener {
+						binding.registerRegister.loadingSuccessful()
 						if (itAuth.additionalUserInfo?.isNewUser == true) {
 							AlertDialog.Builder(this)
 								.setCancelable(false)
 								.setTitle("Welcome")
-								.setMessage("Hi ${itAuth.user?.displayName}, Welcome to the app \"Attendance System\"")
+								.setMessage("Hi ${itAuth.user?.displayName}, Welcome to the \"Attendance System\"")
 								.setPositiveButton("Continue") { dialog, _ ->
 									intentFunction()
 									dialog.dismiss()
@@ -146,6 +150,7 @@ class Register : AppCompatActivity() {
 					}
 			}
 			.addOnFailureListener {
+				binding.registerRegister.loadingFailed()
 				Toast.makeText(applicationContext, "Authentication failed, try after some time", Toast.LENGTH_LONG).show()
 			}
 	}
