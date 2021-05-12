@@ -2,6 +2,7 @@ package com.aditya.attendancesystem.teacher
 
 import android.os.Bundle
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aditya.attendancesystem.databinding.ActivityTeacherCreateNewClassBinding
@@ -33,13 +34,19 @@ class CreateNewClass : AppCompatActivity(), CoroutineScope {
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 		supportActionBar?.title = "Create New Class"
 		
-		
 		with(binding) {
 			teacherCreateRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
 			CoroutineScope(Dispatchers.IO).launch {
 				val urls = getImageUrls()
 				val adapter = CreateClassAdapter(this@CreateNewClass, urls, teacherCreateClassName, teacherCreateProgressLayout)
 				runOnUiThread { teacherCreateRecyclerView.adapter = adapter }
+			}
+			
+			root.setOnClickListener {
+				val inputMethodManager: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+				if (inputMethodManager.isAcceptingText) {
+					inputMethodManager.hideSoftInputFromWindow(currentFocus?.getWindowToken(), 0)
+				}
 			}
 			
 		}

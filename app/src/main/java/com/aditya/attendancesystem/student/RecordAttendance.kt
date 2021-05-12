@@ -132,7 +132,6 @@ class RecordAttendance : AppCompatActivity(), OnMapReadyCallback {
 					initMap()
 			} else {
 				Toast.makeText(this, "Permissions not granted by the user.", Toast.LENGTH_SHORT).show()
-				
 			}
 		}
 	}

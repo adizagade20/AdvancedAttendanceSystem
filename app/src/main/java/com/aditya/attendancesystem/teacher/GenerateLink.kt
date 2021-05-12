@@ -2,6 +2,9 @@ package com.aditya.attendancesystem.teacher
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
@@ -23,7 +26,8 @@ import androidx.work.*
 import com.aditya.attendancesystem.BuildConfig
 import com.aditya.attendancesystem.R
 import com.aditya.attendancesystem.databinding.ActivityTeacherGenerateLinkBinding
-import com.aditya.attendancesystem.teacher.helperclasses.AttendanceDisablerWorker
+import com.aditya.attendancesystem.teacher.helperclasses.DisablerAlarm
+import com.aditya.attendancesystem.teacher.helperclasses.DisablerWorkManager
 import com.aditya.attendancesystem.teacher.helperclasses.DynamicLinkModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
@@ -45,11 +49,10 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.HashMap
-import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
 
-class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
+class GenerateLink : AppCompatActivity(), OnMapReadyCallback {
 	
 	companion object {
 		private const val TAG = "TeacherHome"
@@ -57,9 +60,6 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 		private val LOCATION_REQUEST_CODE = Random.nextInt(1000)
 		private val GPS_REQUEST_CODE = Random.nextInt(1000)
 	}
-	
-	private val job = Job()
-	override val coroutineContext: CoroutineContext get() = Dispatchers.Default + job
 	
 	
 	private var lectureDate: String? = null
@@ -313,7 +313,7 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 							flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
 							type = "text/plain"
 						}
-						registerExpireService(db)
+						registerExpireService(db, time)
 						
 						val shareIntent = Intent.createChooser(sendIntent, null)
 						startActivity(shareIntent)
@@ -328,11 +328,11 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 	}
 	
 	
-	private fun registerExpireService(db: DocumentReference) {
+	private fun registerExpireService(db: DocumentReference, time: String) {
 		val data = Data.Builder()
 			.putString("title", className)
 			.putString("description", lectureDate)
-			.putInt("period", expireTime!! / 5)
+			.putInt("period", expireTime!!)
 			.putString("link", db.path)
 			.putString("date", lectureDate)
 			.build()
@@ -341,12 +341,21 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 			.setRequiredNetworkType(NetworkType.CONNECTED)
 			.build()
 		
-		val request = OneTimeWorkRequest.Builder(AttendanceDisablerWorker::class.java)
+		val request = OneTimeWorkRequest.Builder(DisablerWorkManager::class.java)
 			.setInputData(data)
 			.setConstraints(constraints)
 			.build()
 		
 		WorkManager.getInstance(applicationContext).enqueueUniqueWork(lectureDate!!, ExistingWorkPolicy.REPLACE, request)
+		
+		
+		val alarmManager =getSystemService(Context.ALARM_SERVICE) as AlarmManager
+		val intent = Intent(this, DisablerAlarm::class.java)
+		intent.putExtra("firestorePath", db.path)
+		intent.putExtra("className", className)
+		intent.putExtra("dateTime", "$lectureDate \t $time")
+		val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+		alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (expireTime!! * 60000), pendingIntent)
 	}
 	
 	
@@ -401,14 +410,6 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 				gotoLocation(location.latitude, location.longitude)
 				latitudeMyLocation = location.latitude
 				longitudeMyLocation  = location.longitude
-				
-//				val latitude = 18.7216973
-	//				val longitude = 75.1481091
-//
-//				val results = FloatArray(1)
-//				Location.distanceBetween(location.latitude, location.longitude, latitude, longitude, results)
-//				val distanceInMeters = results[0]
-//				Log.d(TAG, "getCurrentLocation: $distanceInMeters")
 			}
 		}
 	}
@@ -459,6 +460,7 @@ class GenerateLink : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 			if (googleMap != null) {
 				this.googleMap = googleMap
 				googleMap.isMyLocationEnabled = true
+				Log.d(TAG, "onMapReady: googleMap: ${googleMap.mapType}")
 			}
 		}
 	}

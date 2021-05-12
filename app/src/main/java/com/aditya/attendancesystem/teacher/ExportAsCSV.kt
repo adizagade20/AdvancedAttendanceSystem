@@ -1,9 +1,9 @@
 package com.aditya.attendancesystem.teacher
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.TableRow
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +13,6 @@ import com.aditya.attendancesystem.databinding.TeacherExportHeaderBinding
 import com.aditya.attendancesystem.databinding.TeacherExportRowBinding
 import com.aditya.attendancesystem.teacher.helperclasses.DynamicLinkModel
 import com.aditya.attendancesystem.teacher.helperclasses.StudentAttendanceModel
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.ktx.auth
@@ -101,9 +100,6 @@ class ExportAsCSV : AppCompatActivity(), CoroutineScope {
 		}
 		
 		binding.exportFloating.setOnClickListener {
-			binding.exportProgressLayout.visibility = View.VISIBLE
-			binding.exportFloating.isClickable = false
-			binding.exportFloating.isFocusable = false
 			CoroutineScope(Dispatchers.IO).launch {
 				exportToCSV()
 			}
@@ -272,17 +268,17 @@ class ExportAsCSV : AppCompatActivity(), CoroutineScope {
 					val textView = row.getChildAt(j) as MaterialTextView
 						rowData.add(textView.text.toString())
 				}
-				Log.d(TAG, "exportToCSV: $rowData")
 				data.add(rowData)
 			}
 		}
-		Log.d(TAG, "exportToCSV: $data")
-		csvWriter().writeAll(data, "${getOutputDirectory()}/$className.xlsx")
-		val file = Uri.parse("${getOutputDirectory()}/$className.xlx")
-		
-		csvReader().open(file.path!!) {
-			Log.d(TAG, "exportToCSV: read: ${readNext()}")
-		}
+		csvWriter().writeAll(data, "${getOutputDirectory()}/$className.csv")
+		val filePath = "${getOutputDirectory()}/$className.csv"
+		Log.d(TAG, "exportToCSV: $filePath")
+		val sharingIntent = Intent()
+		sharingIntent.action = Intent.ACTION_SEND
+		sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(filePath))
+		sharingIntent.type = "text/csv"
+		startActivity(Intent.createChooser(sharingIntent, "Share CSV file"))
 	}
 	
 	

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.aditya.attendancesystem.databinding.ActivityLoginBinding
@@ -49,8 +50,15 @@ class Login : AppCompatActivity() {
 				startActivity(Intent(this@Login, Register::class.java))
 			}
 			
+			root.setOnClickListener {
+				val inputMethodManager: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+				if (inputMethodManager.isAcceptingText) {
+					inputMethodManager.hideSoftInputFromWindow(currentFocus?.getWindowToken(), 0)
+				}
+			}
+			
 			loginLogin.setOnClickListener {
-				loginLogin.cancelLoading()
+				root.performClick()
 				verify()
 			}
 			
@@ -140,7 +148,6 @@ class Login : AppCompatActivity() {
 				db.get()
 					.addOnSuccessListener {
 						binding.loginLogin.loadingSuccessful()
-						Log.d(TAG, "loginUser: $it")
 						if (it["role"] == "Student") {
 							writeToSharedPreferences(it)
 							val intent = Intent(this, com.aditya.attendancesystem.student.RecordAttendance::class.java)
@@ -154,7 +161,6 @@ class Login : AppCompatActivity() {
 				db.get()
 					.addOnSuccessListener {
 						binding.loginLogin.loadingSuccessful()
-						Log.d(TAG, "loginUser: $it")
 						if (it["role"] == "Teacher") {
 							writeToSharedPreferences(it)
 							val intent = Intent(this, com.aditya.attendancesystem.teacher.Home::class.java)

@@ -3,6 +3,7 @@ package com.aditya.attendancesystem.root
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -35,11 +36,19 @@ class Register : AppCompatActivity() {
 		with(binding) {
 			
 			registerRegister.setOnClickListener {
+				root.performClick()
 				verify()
 			}
 			
 			registerLogin.setOnClickListener {
 				finish()
+			}
+			
+			root.setOnClickListener {
+				val inputMethodManager: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+				if (inputMethodManager.isAcceptingText) {
+					inputMethodManager.hideSoftInputFromWindow(currentFocus?.getWindowToken(), 0)
+				}
 			}
 			
 			registerRole.setOnCheckedChangeListener { _, checkedId ->

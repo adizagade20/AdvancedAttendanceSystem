@@ -188,7 +188,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:gravity="center"
-			android:textSize="20sp"
+			android:textSize="14sp"
 			android:text="@string/to_expire_link_keep_app_running_in_background"
 			android:textAlignment="center" />
 	

@@ -5,6 +5,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.aditya.attendancesystem.databinding.TeacherAdapterCreateClassBinding
@@ -16,7 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
-class CreateClassAdapter(private val context: Context, private val imageUrls: ArrayList<String>, private val teacherCreateClassName: TextInputLayout, private val teacherCreateProgressLayout: ConstraintLayout, ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CreateClassAdapter(private val context: Context, private val imageUrls: ArrayList<String>, private val teacherCreateClassName: TextInputLayout, private val teacherCreateProgressLayout: ConstraintLayout): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	companion object{
 		private const val TAG = "ClassesAdapter"
@@ -50,6 +52,10 @@ class CreateClassAdapter(private val context: Context, private val imageUrls: Ar
 					teacherCreateClassName.error = "Class Name is Required"
 				}
 				else {
+					val inputMethodManager: InputMethodManager = context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+					if (inputMethodManager.isAcceptingText) {
+						inputMethodManager.hideSoftInputFromWindow((context as CreateNewClass).currentFocus?.windowToken, 0)
+					}
 					teacherCreateClassName.isErrorEnabled = false
 					createClass(position, className)
 				}
@@ -95,7 +101,7 @@ class CreateClassAdapter(private val context: Context, private val imageUrls: Ar
 							.setMessage("Class \"$className\" created successfully")
 							.setCancelable(false)
 							.setPositiveButton("Back to Homepage") { _, _ ->
-								val context: Context = context
+//								context.startActivity(Intent(binding.root.context, Home::class.java))
 								(context as CreateNewClass).finish()
 							}
 							.show()
@@ -106,7 +112,7 @@ class CreateClassAdapter(private val context: Context, private val imageUrls: Ar
 							.setMessage(it.localizedMessage)
 							.setCancelable(false)
 							.setPositiveButton("Back to Classes") { _, _ ->
-								val context: Context = context
+//								context.startActivity(Intent(binding.root.context, Home::class.java))
 								(context as CreateNewClass).finish()
 							}
 							.show()

@@ -16,7 +16,7 @@ import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-class AttendanceDisablerWorker(private val context: Context, workerParameters: WorkerParameters) : Worker(context, workerParameters), CoroutineScope {
+class DisablerWorkManager(private val context: Context, workerParameters: WorkerParameters) : Worker(context, workerParameters), CoroutineScope {
 	
 	companion object {
 		private const val TAG = "AttendanceDisablerWork"
@@ -37,7 +37,7 @@ class AttendanceDisablerWorker(private val context: Context, workerParameters: W
 	override fun doWork(): Result {
 		data = inputData
 		Log.d("TAG", "doWork: ${data.keyValueMap}")
-		maxTime = data.getInt("period", 10)
+		maxTime = data.getInt("period", 10) * 60
 		displayNotification(data.getString("title").toString(), data.getString("description").toString())
 		CoroutineScope(Dispatchers.Main).launch {
 			loop()
@@ -49,14 +49,16 @@ class AttendanceDisablerWorker(private val context: Context, workerParameters: W
 	
 	
 	private suspend fun loop() {
-		delay(5000)
-		++time
+		delay(1000)
+		time += 1
 		notification.setProgress(maxTime, time, false)
 		notificationManager.notify(notificationId, notification.build())
-		if (time<maxTime)
+		if (time < maxTime) {
 			loop()
-		else
+		} else {
+			notification.setProgress(0, 0, true)
 			disableLink()
+		}
 	}
 	
 	
@@ -96,6 +98,10 @@ class AttendanceDisablerWorker(private val context: Context, workerParameters: W
 					notification.setProgress(0, 0, false)
 					notificationManager.notify(notificationId, notification.build())
 					Log.d("TAG", "disableLink: ${db.path}")
+				}
+				.addOnFailureListener {
+					notification.setContentTitle("Failed : ${data.getString("title")} : ${data.getString("date")}")
+					notification.setContentText("We are not able to deactivate the link automatically, please disable in manually.")
 				}
 		}
 	}

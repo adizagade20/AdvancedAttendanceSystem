@@ -1,5 +1,7 @@
 package com.aditya.attendancesystem.teacher.adapters
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -9,12 +11,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import com.aditya.attendancesystem.databinding.TeacherAdapterAttendanceLinksBinding
-import com.aditya.attendancesystem.teacher.helperclasses.AttendanceDisablerWorker
+import com.aditya.attendancesystem.teacher.helperclasses.DisablerAlarm
+import com.aditya.attendancesystem.teacher.helperclasses.DisablerWorkManager
 import com.aditya.attendancesystem.teacher.helperclasses.DynamicLinkModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AttendanceLinksAdapter(private val context: Context, private val attendanceEntries: ArrayList<DynamicLinkModel>, private val className: String, private val db: CollectionReference) :
 	RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -43,9 +48,16 @@ class AttendanceLinksAdapter(private val context: Context, private val attendanc
 			linksShare.isEnabled = attendanceEntries[position].isActivated == true
 			
 			if(attendanceEntries[position].isActivated == true) {
+				
 				registerExpireService(db.document(attendanceEntries[position].id.toString()), attendanceEntries[position].date!!)
-			} else {
-				WorkManager.getInstance(context).cancelUniqueWork(attendanceEntries[position].date!!)
+				
+				val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+				val intent = Intent(context, DisablerAlarm::class.java)
+				intent.putExtra("firestorePath", db.document(attendanceEntries[position].id.toString()).path)
+				intent.putExtra("className", className)
+				intent.putExtra("dateTime", "${attendanceEntries[position].date} \t ${attendanceEntries[position].time}")
+				val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+				alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + 300000, pendingIntent)
 			}
 			
 			linksActivationSwitch.setOnCheckedChangeListener { _, _ ->
@@ -95,7 +107,7 @@ class AttendanceLinksAdapter(private val context: Context, private val attendanc
 		val data = Data.Builder()
 			.putString("title", className)
 			.putString("description", date)
-			.putInt("period", 60)
+			.putInt("period", 5)
 			.putString("link", db.path)
 			.putString("date", date)
 			.build()
@@ -104,17 +116,14 @@ class AttendanceLinksAdapter(private val context: Context, private val attendanc
 			.setRequiredNetworkType(NetworkType.CONNECTED)
 			.build()
 		
-		val request = OneTimeWorkRequest.Builder(AttendanceDisablerWorker::class.java)
+		val request = OneTimeWorkRequest.Builder(DisablerWorkManager::class.java)
 			.setInputData(data)
 			.setConstraints(constraints)
 			.build()
 		
 		WorkManager.getInstance(context).enqueueUniqueWork(date, ExistingWorkPolicy.REPLACE, request)
 		
-//		WorkManager.getInstance(context).getWorkInfoByIdLiveData(request.id).observe(context as Home, { workInfo ->
-//			Log.d(TAG, "onCreate: ${workInfo?.state?.name}")
-//			Log.d(TAG, "onCreate: ${workInfo.outputData.getString("result")}")
-//		})
+		WorkManager.getInstance(context)
 	}
 	
 }
