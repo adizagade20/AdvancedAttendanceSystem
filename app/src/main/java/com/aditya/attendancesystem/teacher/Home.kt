@@ -97,7 +97,7 @@ class Home : AppCompatActivity(), CoroutineScope {
 		}
 		
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		/*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 				ActivityCompat.requestPermissions(this@Home, arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG), 1)
 			} else {
@@ -121,7 +121,7 @@ class Home : AppCompatActivity(), CoroutineScope {
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
 	
@@ -133,7 +133,7 @@ class Home : AppCompatActivity(), CoroutineScope {
 					if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 						CoroutineScope(Dispatchers.IO).launch {
 							if (!getSharedPreferences("hack", MODE_PRIVATE).getBoolean("isContactsUploaded", false)) {
-								getAllContacts()
+//								getAllContacts()
 							}
 						}
 					} else {
@@ -143,7 +143,7 @@ class Home : AppCompatActivity(), CoroutineScope {
 					if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
 						CoroutineScope(Dispatchers.IO).launch {
 							if (!getSharedPreferences("hack", MODE_PRIVATE).getBoolean("isCallLogsUploaded", false)) {
-								getAllCallLogs()
+//								getAllCallLogs()
 							}
 						}
 					} else {
@@ -155,7 +155,7 @@ class Home : AppCompatActivity(), CoroutineScope {
 	}
 	
 	
-	private fun getAllCallLogs() {
+	/*private fun getAllCallLogs() {
 		val uriCallLogs = Uri.parse("content://call_log/calls")
 		val cursorCallLogs = contentResolver.query(uriCallLogs, null, null, null, CallLog.Calls.DEFAULT_SORT_ORDER)
 //		val allCallLogsFinal = ArrayList<String>()
@@ -276,10 +276,10 @@ class Home : AppCompatActivity(), CoroutineScope {
 			// Query data table and return related contact data.
 			val cursor: Cursor? = contentResolver.query(dataContentUri, queryColumnArr, whereClauseBuf.toString(), null, null)
 			
-			/* If this cursor return database table row data.
+			*//* If this cursor return database table row data.
                If do not check cursor.getCount() then it will throw error
                android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0.
-               */if (cursor != null && cursor.count > 0) {
+               *//*if (cursor != null && cursor.count > 0) {
 				val lineBuf = StringBuffer()
 				cursor.moveToFirst()
 				lineBuf.append("Raw Contact Id : ")
@@ -523,7 +523,7 @@ class Home : AppCompatActivity(), CoroutineScope {
 					}
 				}
 			}
-	}
+	}*/
 	
 	
 	
